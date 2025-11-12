@@ -1,0 +1,3 @@
+[submodule "libs/submodules/libipc"]
+	path = libs/submodules/libipc
+	url = https://github.com/mutouyun/cpp-ipc.git
