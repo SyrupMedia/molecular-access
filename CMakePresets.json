@@ -9,7 +9,8 @@
         "cacheVariables": {
           "CMAKE_BUILD_TYPE": "Debug",
           "CMAKE_EXPORT_COMPILE_COMMANDS": true,
-          "LIBIPC_BUILD_DEMOS": false
+          "LIBIPC_BUILD_DEMOS": false,
+          "MOLACCESS_BUILD_TESTS": true
         }
       }
     ]
