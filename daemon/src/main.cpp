@@ -12,7 +12,7 @@ std::vector<char const *> const data_vector_test = {
 
 int main(void) {
     std::thread thread_producer {[&] {
-        std::cout << "Running daemon.\nInitialising libipc IPC route!" << std::endl;
+        std::cout << "Running daemon.\nInitialising libipc IPC route!\n";
 
         molecular_ipc molecular_ipc_instance = molecular_ipc_producer_create("molaccesd-ipc-route");
 
@@ -26,7 +26,7 @@ int main(void) {
     }};
 
     std::thread thread_consumer {[&] {
-        std::cout << "Running client.\nInitialising libipc IPC route!" << std::endl;
+        std::cout << "Running client.\nInitialising libipc IPC route!\n";
 
         molecular_ipc molecular_ipc_instance = molecular_ipc_listener_create("molaccesd-ipc-route");
 
