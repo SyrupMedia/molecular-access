@@ -12,6 +12,30 @@
           "LIBIPC_BUILD_DEMOS": false,
           "MOLACCESS_BUILD_TESTS": true
         }
+      },
+      {
+        "name": "release",
+        "displayName": "Release",
+        "generator": "Ninja",
+        "binaryDir": "target/release",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Release",
+          "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+          "LIBIPC_BUILD_DEMOS": false,
+          "MOLACCESS_BUILD_TESTS": false
+        }
       }
-    ]
+    ],
+    "buildPresets": [
+    {
+      "name": "debug",
+      "displayName": "Build Debug",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "displayName": "Build Release",
+      "configurePreset": "release"
+    }
+  ]
   }

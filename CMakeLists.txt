@@ -15,8 +15,7 @@ macro(link TARGET)
     target_include_directories(${TARGET} PUBLIC ${IPC_INCLUDES})    
 endmacro()
 
-add_subdirectory(daemon)
-add_subdirectory(client)
+add_subdirectory(core)
 
 if(BUILD_TESTS)
     add_subdirectory(tests)
