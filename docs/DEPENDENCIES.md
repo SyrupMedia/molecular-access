@@ -2,7 +2,7 @@
 
 ## libipc
 
-[License file](libs/submodules/libipc/LICENSE) 
+[License file](../libs/submodules/libipc/LICENSE) 
 
 [License URL](https://github.com/mutouyun/cpp-ipc/blob/a0c7725a1441d18bc768d748a93e512a0fa7ab52/LICENSE)
 
