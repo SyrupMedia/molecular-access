@@ -53,5 +53,9 @@
 [Tt]arget/*
 installdir
 
+# Bindings are auto-generated, best to ignore them to avoid confusion.
+core/src/bindings/*
+!core/src/bindings/molecular.i
+
 # General ignore directory
 [Ii]gnore/*

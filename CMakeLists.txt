@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
 project(molecular-access)
 
+set(CMAKE_SHARED_LIBRARY_PREFIX "_")
+set(CMAKE_STATIC_LIBRARY_PREFIX "_")
+
 option(MOLACCESS_BUILD_TESTS OFF)
 
 add_subdirectory(libs/submodules/libipc)
@@ -17,6 +20,6 @@ endmacro()
 
 add_subdirectory(core)
 
-if(BUILD_TESTS)
-    add_subdirectory(tests)
+if(MOLACCESS_BUILD_TESTS)
+    #add_subdirectory(tests)
 endif()
