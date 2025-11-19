@@ -47,7 +47,7 @@ manually with CMake.
 ➜ swig -python -c++ -o molecular_wrap.cpp core/src/bindings/molecular.i
 ➜ cmake -B target/release -D CMAKE_BUILD_TYPE=Release
 ➜ cmake --build target/release -j$(nproc)
-# O-j$(nproc)pyinally nstall into the ./installdir directory
+# Optionally install into the ./installdir directory
 ➜ DESTDIR="$(pwd)/installdir" cmake --build target/release --target=install
 
 ```
