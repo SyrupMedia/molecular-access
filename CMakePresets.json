@@ -24,6 +24,18 @@
           "LIBIPC_BUILD_DEMOS": false,
           "MOLACCESS_BUILD_TESTS": false
         }
+      },
+      {
+        "name": "release-windows",
+        "displayName": "Release (Windows)",
+        "generator": "Visual Studio 17 2022",
+        "binaryDir": "target/release",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Release",
+          "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+          "LIBIPC_BUILD_DEMOS": false,
+          "MOLACCESS_BUILD_TESTS": true
+        }
       }
     ],
     "buildPresets": [
@@ -36,6 +48,11 @@
       "name": "release",
       "displayName": "Build Release",
       "configurePreset": "release"
+    },
+    {
+      "name": "release-windows",
+      "displayName": "Build Release (Windows)",
+      "configurePreset": "release-windows"
     }
   ]
   }

@@ -1,4 +1,4 @@
-%module molaccess
+%module molaccesspy
 
 %include <std_shared_ptr.i>
 
