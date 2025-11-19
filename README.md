@@ -36,7 +36,7 @@ should work on most systems.
 ```sh
 make swig
 make release -j$(nproc)
-# Optionally nstall into the ./installdir directory
+# Optionally install into the ./installdir directory
 make install
 ```
 
@@ -54,7 +54,7 @@ manually with CMake.
 
 ## Python Bindings
 
-In order to make use of the Python bindings, make sure the
+In order to make use of the Python bindings, make sure a copy of the
 `core/src/bindings/molaccesspy.py` file is located next to the 
 `_molaccesspy.so` or `_molaccesspy.dll` file.
 
