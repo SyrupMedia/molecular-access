@@ -34,10 +34,10 @@ The included [`Makefile`](Makefile) abstracts the build process away, and
 should work on most systems.
 
 ```sh
-make swig
-make release -j$(nproc)
+➜ make swig
+➜ make release -j$(nproc)
 # Optionally install into the ./installdir directory
-make install
+➜ make install
 ```
 
 ### Manual Build
