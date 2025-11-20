@@ -1,6 +1,10 @@
 #include "molaccess.hpp"
 #include "molaccess_ipc.hpp"
 
+void molecular_say_hello() {
+    std::cout << "Hello, from Molecular!" << '\n';
+}
+
 void molecular_send(molecular_ipc &molecular_ipc_target, const char *message_data) {
     molecular_ipc_target.molecular_ipc_route->send(message_data);
 }

@@ -14,6 +14,8 @@ typedef struct molecular_message {
     molecular_message_type message_type;
 } molecular_message;
 
+void molecular_say_hello();
+
 void molecular_send(molecular_ipc &molecular_ipc_target, const char *message_data);
 
 molecular_ipc molecular_ipc_producer_create(const char *molecular_ipc_route_name_init);
