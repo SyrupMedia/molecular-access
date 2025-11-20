@@ -1,8 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <functional>
-#include <thread>
 #include <memory>
 
 #include <libipc/ipc.h>

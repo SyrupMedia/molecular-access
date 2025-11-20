@@ -28,6 +28,10 @@ install-windows:
 		cp core/src/bindings/molaccesspy.py "$(CWD)/installdir/Program Files (x86)/molecular-access/lib/"; \
 	fi;
 
+	mv \
+	"$(CWD)/installdir/Program Files (x86)/molecular-access/lib/_molaccesspy.dll" \
+	"$(CWD)/installdir/Program Files (x86)/molecular-access/lib/_molaccesspy.pyd"
+
 # Bindings
 swig:
 	swig -python -c++ core/src/bindings/molecular.i

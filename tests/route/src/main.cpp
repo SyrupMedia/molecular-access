@@ -6,9 +6,13 @@
 #include "molaccess.hpp"
 
 std::vector<char const *> const data_vector_test = {
-    "Hello,",
+    "Hello",
     "world!",
 };
+
+void molecular_ipc_listener_update_callback(char* input_string) {
+    std::cout << input_string << "!!!" << '\n';
+}
 
 int main(void) {
     std::thread thread_producer { [&] {
@@ -30,16 +34,7 @@ int main(void) {
 
                                       molecular_ipc molecular_ipc_instance = molecular_ipc_listener_create("molaccesd-ipc-route");
 
-                                      while (1) {
-                                          auto buf = molecular_ipc_instance.molecular_ipc_route->recv();
-                                          auto str = static_cast<char *>(buf.data());
-
-                                          if (str == nullptr || str[0] == '\0') {
-                                              return 0;
-                                          }
-
-                                          std::printf("Received: %s\n", str);
-                                      }
+                                      molecular_ipc_listener_update(molecular_ipc_instance, molecular_ipc_listener_update_callback);
                                   } };
 
     thread_producer.join();

@@ -24,3 +24,22 @@ molecular_ipc molecular_ipc_listener_create(const char *molecular_ipc_route_name
 
     return molecular_ipc_init;
 }
+
+// std::function<void()> function_on_update
+void molecular_ipc_listener_update(
+        molecular_ipc &molecular_ipc_target, 
+        void(*function_on_update)(char*)
+    ) {
+    std::printf("Running update cycle.\n");
+
+    while (1) {
+        auto buf = molecular_ipc_target.molecular_ipc_route->recv();
+        auto str = static_cast<char *>(buf.data());
+
+        if (str == nullptr || str[0] == '\0') {
+            return;
+        }
+
+        (*function_on_update)(str);
+    }
+}
