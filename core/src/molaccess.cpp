@@ -9,6 +9,10 @@ void molecular_send(molecular_ipc &molecular_ipc_target, const char *message_dat
     molecular_ipc_target.molecular_ipc_route->send(message_data);
 }
 
+void molecular_ipc_producer_wait_for_listener(molecular_ipc &molecular_ipc_producer_target) {
+    molecular_ipc_producer_target.molecular_ipc_route->wait_for_recv(1);
+}
+
 molecular_ipc molecular_ipc_producer_create(const char *molecular_ipc_route_name_init) {
     molecular_ipc molecular_ipc_init = {
         std::shared_ptr<ipc::route> {new ipc::route { molecular_ipc_route_name_init }},

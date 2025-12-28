@@ -19,6 +19,7 @@ void molecular_say_hello();
 void molecular_send(molecular_ipc &molecular_ipc_target, const char *message_data);
 
 molecular_ipc molecular_ipc_producer_create(const char *molecular_ipc_route_name_init);
+void molecular_ipc_producer_wait_for_listener(molecular_ipc &molecular_ipc_producer_target);
 
 molecular_ipc molecular_ipc_listener_create(const char *molecular_ipc_route_name_init);
 void molecular_ipc_listener_update(

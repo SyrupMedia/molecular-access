@@ -1,10 +1,12 @@
 set(HEADER_FILES
     ../../include/molaccess.hpp
     ../../include/molaccess_ipc.hpp
+    molaccess_python.hpp
 )
 
 set(BINDING_FILES 
     molecular_wrap.cxx
+    molaccess_python.cpp
 )
 
 set(MAIN src/main.cpp)
