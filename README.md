@@ -66,7 +66,9 @@ manually with CMake.
 
 ```
 
-## Python Bindings
+
+## Python
+### Bindings
 
 In order to make use of the Python bindings, make sure a copy of the
 `core/src/bindings/molaccesspy.py` file is located next to the 
@@ -75,3 +77,16 @@ In order to make use of the Python bindings, make sure a copy of the
 On Windows, the `_molaccesspy.dll` file, built by CMake, must* be renamed to
 `_molaccesspy.pyd` in order to work. The Makefile should take care of this when
 installing locally with `make install-windows`.
+
+### Tests
+Running the [callback test](tests/python/callback/src/main.py) requires the
+shared library built by Cython from the [`Setup.py`](core/src/bindings/Setup.py)
+script to run. This library is called something along the lines of
+`molaccescy.cpython-*.so`.
+
+On Linux, `make install` should take care of placing this file in the installed
+library directory.
+
+Windows users must copy this library manually.
+
+The `Setup.py` script will be removed in the future, in favour of using CMake.
