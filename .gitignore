@@ -56,9 +56,11 @@ installdir
 # Bindings are auto-generated, best to ignore them to avoid confusion.
 core/src/bindings/*
 !core/src/bindings/CMakeLists.txt
-!core/src/bindings/molaccess_python.cpp
-!core/src/bindings/molaccess_python.hpp
+!core/src/bindings/molacces_python.c
+!core/src/bindings/molacces_python.h
+!core/src/bindings/molacces_python_wrapper.pyx
 !core/src/bindings/molecular.i
+!core/src/bindings/Setup.py
 
 # General ignore directory
 [Ii]gnore/*
