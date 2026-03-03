@@ -41,6 +41,9 @@ __pycache__/
 *.x86_64
 *.hex
 
+# Logging
+*.log
+
 # Debug files
 *.dSYM/
 *.su
