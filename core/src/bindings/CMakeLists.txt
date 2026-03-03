@@ -1,13 +1,12 @@
 set(HEADER_FILES
     ../../include/molaccess.hpp
     ../../include/molaccess_ipc.hpp
-    molacces_python.h
+    molaccess_python.hpp
 )
 
 set(BINDING_FILES 
     molecular_wrap.cxx
-    molacces_python.c
-    molacces_python_wrapper.c
+    molaccess_python.cpp
 )
 
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
