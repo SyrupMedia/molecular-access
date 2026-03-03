@@ -1,9 +1,39 @@
 # Molecular Access
-[![Source code](https://img.shields.io/badge/source-codeberg-blue?style=for-the-badge&logo=codeberg&color=84b9c9&logoColor=FFFFFF&labelColor=262a35)](https:git.syrup.media/SyrupMedia/molecular-access)
+[![Source code](https://img.shields.io/badge/source-codeberg-blue?style=for-the-badge&logo=codeberg&color=84b9c9&logoColor=FFFFFF&labelColor=262a35)](https://codeberg.org/SyrupMedia/molecular-access)
 
-This is a free and open-source accessibility interface.
+This is a free and open-source accessibility interface, designed with real-time
+(rendering) applications, such as games, in mind.
 
-It supports Windows and Linux, with macOS support coming soon.
+Supported platforms include Windows and Linux, with future MacOS support 
+planned.
+
+## About
+Molecular Access is a project which facilitates dynamic communication 
+between processes in order to allow end-users to modify abstract data 
+exposed to them by processes, and to allow processes to call abstract 
+methods declared by other processes.
+
+All of this is accomplished in a non-invasive way, which prioritises
+developers, and follows an opt-in approach to features. Projects can expose as
+much or as little data or functionality towards one another as they like.
+
+The end goal here is to allow users, particularly users in need of additional
+customisation to ensure accessibility, to be able to easily manage the data and
+resources of other processes. That's customisation which might include changing
+an image texture, changing a colour value, disabling or enabling visual effects, 
+etc.
+
+Such functionality can already be provided to users through bespoke, custom
+implementations, without the need of Molecular - however, it comes at the
+expense of standardisation, and at the expense of possible integration
+between other processes. This solution is scalable, dynamic, and made to
+cultivate ecosystems. In contrast, opening up features to users without such
+a project leaves such features isolated, especially when the idea of 
+inter-process communication is neglected or outright rejected.
+
+In practice, Molecular Access is a project aiming to make software more
+transparent, at the discretion of developers, in hopes of improving 
+accessibility.
 
 ## Cloning
 
