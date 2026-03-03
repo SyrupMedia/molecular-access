@@ -10,10 +10,10 @@ script_directory = PureWindowsPath(
 ).as_posix()
 
 search_directories = {
-    "install_directory_windows": f"{script_directory}/../../../installdir/Program Files (x86)/molecular-access/lib",
-    "install_directory_linux_generic": f"{script_directory}/../../../installdir/usr/local/lib",
-    "install_directory_linux_ubuntu": f"{script_directory}/../../../installdir/ubuntu/usr/local/lib",
-    "install_directory_linux_fedora": f"{script_directory}/../../../installdir/fedora/usr/local/lib",
+    "install_directory_windows": f"{script_directory}/../../../../installdir/Program Files (x86)/molecular-access/lib",
+    "install_directory_linux_generic": f"{script_directory}/../../../../installdir/usr/local/lib",
+    "install_directory_linux_ubuntu": f"{script_directory}/../../../../installdir/ubuntu/usr/local/lib",
+    "install_directory_linux_fedora": f"{script_directory}/../../../../installdir/fedora/usr/local/lib",
 }
 
 
