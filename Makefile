@@ -38,8 +38,3 @@ install-windows:
 # Bindings
 swig:
 	swig -python -c++ core/src/bindings/molecular.i
-
-# Transpile Cython files into Python
-cython:
-	cythonize core/src/bindings/molacces_python_wrapper.pyx
-	cd core/src/bindings; python Setup.py build_ext --inplace
