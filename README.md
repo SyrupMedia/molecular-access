@@ -1,11 +1,18 @@
 # Molecular Access
 [![Source code](https://img.shields.io/badge/source-codeberg-blue?style=for-the-badge&logo=codeberg&color=84b9c9&logoColor=FFFFFF&labelColor=262a35)](https://codeberg.org/SyrupMedia/molecular-access)
+[![Source mirror](https://img.shields.io/badge/source%20mirror-github-red?style=for-the-badge&logo=github&color=c58dda&logoColor=FFFFFF&labelColor=262a35)](https://codeberg.org/SyrupMedia/molecular-access)
 
 This is a free and open-source accessibility interface, designed with real-time
 (rendering) applications, such as games, in mind.
 
 Supported platforms include Windows and Linux, with future MacOS support 
 planned.
+
+This project is hosted and organised on 
+[Codeberg](https://codeberg.org/SyrupMedia/molecular-access). Please report any
+bugs, and submit any contributions on there. An official mirror is available on
+[GitHub](https://github.com/SyrupMedia/molecular-access),
+however, pull requests and issues are closed there.
 
 ## About
 Molecular Access is a project which facilitates dynamic communication 
@@ -96,6 +103,6 @@ In order to make use of the Python bindings, make sure a copy of the
 `core/src/bindings/molaccesspy.py` file is located next to the 
 `_molaccesspy.so` or `_molaccesspy.pyd` file.
 
-On Windows, the `_molaccesspy.dll` file, built by CMake, must* be renamed to
+On Windows, the `_molaccesspy.dll` file, built by CMake, *must* be renamed to
 `_molaccesspy.pyd` in order to work. The Makefile should take care of this when
 installing locally with `make install-windows`.
