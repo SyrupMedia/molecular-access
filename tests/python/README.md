@@ -1,6 +1,6 @@
 # Tests
 ## Bindings
-The [`bindings`](bindings/src) test is composed of two Python scripts, using 
+The bindings test is composed of two Python scripts, using 
 the Molecular Access API bindings, generated using Swig. It demonstrates a 
 simple client-server setup where one IPC instance, the client, receives a 
 string from another IPC instance, the server. Subsequently, the client calls a
@@ -17,8 +17,7 @@ can be done by running each script in seperate terminal sessions, or
 alternatively by running the `run.sh` script. This is the recommended way.
 
 ```sh
-➜ cd bindings/src
-➜ sh run.sh
+➜ sh run_bindings_test.sh
 ```
 
 #### Manually

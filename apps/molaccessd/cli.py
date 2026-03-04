@@ -7,6 +7,8 @@ This file should not be imported as a module.
 
 import molaccesspy
 
+from tinydb import TinyDB, Query
+
 
 class MolecularResourceManager:
     resource_keys: list[str] = [
@@ -25,17 +27,39 @@ class MolecularResourceManager:
     ]
 
     methods: dict[str, callable] = {
-        "CLOSE": resource_close(),
-        "READ": resource_read(),
-        "CREATE": resource_create(),
-        "UPDATE": resource_update(),
-        "SET": resource_set(),
-        "RESET": resource_reset(),
-        "LOCK": resource_lock(),
-        "UNLOCK": resource_unlock(),
-        "STAT": resource_stat(),
-        "CALL": resource_call(),
+        "CLOSE": None,
+        "READ": None,
+        "CREATE": None,
+        "UPDATE": None,
+        "SET": None,
+        "RESET": None,
+        "LOCK": None,
+        "UNLOCK": None,
+        "STAT": None,
+        "CALL": None,
     }
+
+    def __init__(self):
+        self.methods = {
+            "CLOSE": self.resource_close,
+            "READ": self.resource_read,
+            "CREATE": self.resource_create,
+            "UPDATE": self.resource_update,
+            "SET": self.resource_set,
+            "RESET": self.resource_reset,
+            "LOCK": self.resource_lock,
+            "UNLOCK": self.resource_unlock,
+            "STAT": self.resource_stat,
+            "CALL": self.resource_call,
+        }
+
+    def method_call(self, method_key: str, *args):
+        method_key = method_key.upper()
+
+        if self.methods[method_key]: 
+            self.methods[method_key](*args)
+        else:
+            raise ValueError(f"The method {method_key} is not a valid method.")
 
     def resource_close():
         """
@@ -52,13 +76,13 @@ class MolecularResourceManager:
 
         pass
 
-    def resource_create():
+    def resource_create(self, resource_name: str):
         """
         Creates a new resource in the collection associated with the connection
         route.
         """
 
-        pass
+        print(f"Creating {resource_name}")
 
     def resource_update():
         """
@@ -116,9 +140,13 @@ class MolecularResourceManager:
 
 class MolecularApplication:
     ipc_instance = None
+    database_path: str = ""
+    resource_manager = None
 
-    def __init__(self):
+    def __init__(self, database_path: str):
         self.ipc_instance = molaccesspy.ManagedConsumer("molaccess-ipc-route-test")
+        self.database_path = database_path
+        self.resource_manager = MolecularResourceManager()
 
     def application_on_update(data_input: str):
         print(
@@ -131,12 +159,14 @@ class MolecularApplication:
         # - Manipulate resources and collections
 
     def application_run(self):
-        ipc_instance.subscribe_update(self.application_on_update)
+        #ipc_instance.subscribe_update(self.application_on_update)
+        self.resource_manager.resource_create("Test")
+        self.resource_manager.method_call("CREATE", "Test2")
 
 
 def main():
-    pass
-
+    molaccessd_application_instance = MolecularApplication("../../test.db")
+    molaccessd_application_instance.application_run()
 
 if __name__ == "__main__":
     main()

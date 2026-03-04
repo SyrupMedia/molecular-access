@@ -21,7 +21,8 @@ class TestData:
         os.path.normpath(PureWindowsPath(script_directory).as_posix())
     ).as_posix()
 
-    installdir_root: str = f"{script_directory}/../../../../installdir"
+    depth_traversal_string: str = f"../.."
+    installdir_root: str = f"{script_directory}/{depth_traversal_string}/installdir"
     libdirectory_unix: str = "usr/local/lib"
 
     common_distributions: list[str] = [
@@ -79,6 +80,8 @@ def append_import_directory() -> bool:
         directory = search_directories[search_directory]
 
         if os.path.exists(directory):
+            print(f":: Found {directory}")
+
             if os.path.exists(f"{directory}/_molaccesspy.so") or os.path.exists(
                 f"{directory}/_molaccesspy.pyd"
             ):
