@@ -53,10 +53,10 @@ Please ensure you clone the repository recursively, as it uses submodules.
 
 ## Building
 
+### Dependencies
+
 The only internal build dependency is [`libipc`](https://github.com/mutouyun/cpp-ipc),
 which must be cloned as a submodule.
-
-### Dependencies
 
 If you did not clone the repository recursively, initialise it as such:
 
