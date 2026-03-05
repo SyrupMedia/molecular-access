@@ -1,3 +1,6 @@
 [submodule "libs/submodules/libipc"]
 	path = libs/submodules/libipc
 	url = https://github.com/mutouyun/cpp-ipc.git
+[submodule "docs/wiki"]
+	path = docs/wiki
+	url = https://codeberg.org/SyrupMedia/molecular-access.wiki.git
