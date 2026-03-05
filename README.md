@@ -13,7 +13,7 @@ planned.
 > [Codeberg](https://codeberg.org/SyrupMedia/molecular-access). Please report any
 > bugs, and submit any contributions on there. An official mirror is available on
 > [GitHub](https://github.com/SyrupMedia/molecular-access),
-> however, pull requests and issues are closed there.
+> however, pull requests and issues cannot be made from there.
 
 ## About
 Molecular Access is a project which facilitates dynamic communication 
