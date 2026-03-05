@@ -11,6 +11,8 @@ from tinydb import TinyDB, Query
 
 
 class MolecularResourceManager:
+    database_instance = None
+
     resource_keys: list[str] = [
         "resource_collection",
         "resource_methods_allowed",
@@ -39,7 +41,7 @@ class MolecularResourceManager:
         "CALL": None,
     }
 
-    def __init__(self):
+    def __init__(self, application_database_instance):
         self.methods = {
             "CLOSE": self.resource_close,
             "READ": self.resource_read,
@@ -53,13 +55,15 @@ class MolecularResourceManager:
             "CALL": self.resource_call,
         }
 
+        self.database_instance = application_database_instance
+
     def method_call(self, method_key: str, *args):
         method_key = method_key.upper()
 
-        if self.methods[method_key]: 
+        if method_key in self.methods:
             self.methods[method_key](*args)
         else:
-            raise ValueError(f"The method {method_key} is not a valid method.")
+            raise ValueError(f"The method '{method_key}' is not a valid method.")
 
     def resource_close():
         """
@@ -82,7 +86,9 @@ class MolecularResourceManager:
         route.
         """
 
-        print(f"Creating {resource_name}")
+        print(f":: Creating {resource_name}")
+
+        self.database_instance.insert({"resource_name": resource_name})
 
     def resource_update():
         """
@@ -141,12 +147,14 @@ class MolecularResourceManager:
 class MolecularApplication:
     ipc_instance = None
     database_path: str = ""
+    database_instance = None
     resource_manager = None
 
     def __init__(self, database_path: str):
         self.ipc_instance = molaccesspy.ManagedConsumer("molaccess-ipc-route-test")
         self.database_path = database_path
-        self.resource_manager = MolecularResourceManager()
+        self.database_instance = TinyDB(database_path)
+        self.resource_manager = MolecularResourceManager(self.database_instance)
 
     def application_on_update(data_input: str):
         print(
@@ -159,14 +167,15 @@ class MolecularApplication:
         # - Manipulate resources and collections
 
     def application_run(self):
-        #ipc_instance.subscribe_update(self.application_on_update)
+        # ipc_instance.subscribe_update(self.application_on_update)
         self.resource_manager.resource_create("Test")
         self.resource_manager.method_call("CREATE", "Test2")
 
 
 def main():
-    molaccessd_application_instance = MolecularApplication("../../test.db")
+    molaccessd_application_instance = MolecularApplication("../../test-database.json")
     molaccessd_application_instance.application_run()
+
 
 if __name__ == "__main__":
     main()
