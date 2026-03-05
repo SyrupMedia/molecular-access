@@ -6,7 +6,7 @@ simple client-server setup where one IPC instance, the client, receives a
 string from another IPC instance, the server. Subsequently, the client calls a
 callback function using the string as an input. 
 
-> [!IMPORANT] 
+> [!IMPORTANT] 
 > It is important to note that the Molecular Access API does not internally
 > recognise 'server' or 'client' processes. Everything is treated as an IPC
 > instance, and any instance can choose to freely receive or transmit data.
