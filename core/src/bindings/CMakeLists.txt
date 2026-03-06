@@ -1,27 +1,16 @@
-set(HEADER_FILES
-    ../../include/molaccess.hpp
-    ../../include/molaccess_ipc.hpp
-    molaccess_python.hpp
-)
-
-set(BINDING_FILES 
-    molecular_wrap.cxx
-    molaccess_python.cpp
-)
-
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
-add_library(molaccesspy SHARED ${HEADER_FILES} ${BINDING_FILES})
+find_package(SWIG COMPONENTS python REQUIRED)
+include(UseSWIG)
 
-set_target_properties(molaccesspy PROPERTIES OUTPUT_NAME "molaccesspy")
-set_target_properties(molaccesspy PROPERTIES LINKER_LANGUAGE CXX)
+set_property(SOURCE molecular.i PROPERTY CPLUSPLUS ON)
+swig_add_library(molaccesspy TYPE SHARED LANGUAGE python SOURCES molecular.i molaccess_python.cpp)
 
-target_include_directories(molaccesspy PUBLIC include)
-
-target_include_directories(molaccesspy PUBLIC ${Python3_INCLUDE_DIRS})
+target_include_directories(molaccesspy PUBLIC ./)
 
 target_link_libraries(molaccesspy molaccess Python::Python)
 
+# not sure whether this is still needed
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(molaccesspy -mwindows)
 endif()
