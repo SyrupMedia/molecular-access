@@ -1,13 +1,18 @@
 CWD := $(abspath $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST))))))
 
+all: release
+
+clean:
+	rm -rf target
+	rm -rf installdir
+
 debug:
 	cmake --preset debug
 	cmake --build --preset debug -j$(nproc)
-release:
+release: swig
 	cmake --preset release
 	cmake --build --preset release -j$(nproc)
-install:
-	$(MAKE) release
+install: release
 	DESTDIR="$(CWD)/installdir" cmake --build target/release --target=install
 
 	if [ -f core/src/bindings/molaccesspy.py ] ; \
@@ -15,15 +20,11 @@ install:
 		cp core/src/bindings/molaccesspy.py "$(CWD)/installdir/usr/local/lib/molaccesspy.py"; \
 	fi;
 
-	cp $(wildcard core/src/bindings/molaccescy.cpython*) "$(CWD)/installdir/usr/local/lib/";
-
-
 # Windows
-release-windows:
+release-windows: swig
 	cmake --preset release-windows
 	cmake --build --preset release-windows -j$(nproc)
-install-windows:
-	$(MAKE) release-windows
+install-windows: release-windows
 	DESTDIR="$(CWD)/installdir" cmake --build target/release --target=install
 
 	if [ -f core/src/bindings/molaccesspy.py ] ; \
