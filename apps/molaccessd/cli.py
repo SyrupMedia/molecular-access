@@ -5,13 +5,18 @@ The entrypoint for the `molaccessd` process, meant to be run as an executable.
 This file should not be imported as a module.
 """
 
+import datetime
+import json
+
 import molaccesspy
 
 from tinydb import TinyDB, Query
 
 
 class MolecularResourceManager:
+    application_ipc_instance = None
     database_instance = None
+    database_query_instance = None
 
     resource_keys: list[str] = [
         "resource_collection",
@@ -28,6 +33,13 @@ class MolecularResourceManager:
         "resource_value_type",
     ]
 
+    resource_types: dict[str, type] = {
+        "bool": bool,
+        "string": str,
+        "int": int,
+        "float": float,
+    }
+
     methods: dict[str, callable] = {
         "CLOSE": None,
         "READ": None,
@@ -41,7 +53,7 @@ class MolecularResourceManager:
         "CALL": None,
     }
 
-    def __init__(self, application_database_instance):
+    def __init__(self, application_ipc_instance, application_database_instance, application_database_query_instance):
         self.methods = {
             "CLOSE": self.resource_close,
             "READ": self.resource_read,
@@ -55,7 +67,9 @@ class MolecularResourceManager:
             "CALL": self.resource_call,
         }
 
+        self.application_ipc_instance = application_ipc_instance
         self.database_instance = application_database_instance
+        self.database_query_instance = application_database_query_instance
 
     def method_call(self, method_key: str, *args):
         method_key = method_key.upper()
@@ -64,6 +78,38 @@ class MolecularResourceManager:
             self.methods[method_key](*args)
         else:
             raise ValueError(f"The method '{method_key}' is not a valid method.")
+
+    def resource_dictionary_create(
+        self,
+        resource_name,
+        resource_value,
+        resource_value_default,
+        resource_value_type,
+        resource_collection="Molecular:Default",
+        resource_methods_allowed="ALL",
+        resource_methods_provided=None,
+        resource_state_callable=False,
+        resource_state_locked=False,
+    ) -> dict:
+
+        datetime_now_string = str(datetime.datetime.now())
+
+        new_resource_dictionary: dict = {
+            "resource_collection": resource_collection,
+            "resource_methods_allowed": resource_methods_allowed,
+            "resource_methods_provided": resource_methods_provided,
+            "resource_name": resource_name,
+            "resource_state_callable": resource_state_callable,
+            "resource_state_locked": resource_state_locked,
+            "resource_time_creation": datetime_now_string,
+            "resource_time_last_modified": datetime_now_string,
+            "resource_time_last_read": datetime_now_string,
+            "resource_value": resource_value,
+            "resource_value_default": resource_value_default,
+            "resource_value_type": resource_value_type,
+        }
+
+        return new_resource_dictionary
 
     def resource_close():
         """
@@ -80,15 +126,38 @@ class MolecularResourceManager:
 
         pass
 
-    def resource_create(self, resource_name: str):
+    def resource_create(
+        self,
+        new_resource_name,
+        new_resource_value,
+        new_resource_value_default,
+        new_resource_value_type,
+    ):
         """
         Creates a new resource in the collection associated with the connection
         route.
         """
 
-        print(f":: Creating {resource_name}")
+        if not new_resource_value_type in self.resource_types:
+            raise ValueError(f"The type '{resource_value_type}' is not supported.")
 
-        self.database_instance.insert({"resource_name": resource_name})
+        resource_query = self.database_instance.search(self.database_query_instance.resource_name == new_resource_name)
+
+        if not resource_query:
+            print(f":: Creating {new_resource_name}")
+
+            new_resource_dictionary = self.resource_dictionary_create(
+                resource_name=new_resource_name,
+                resource_value=new_resource_value,
+                resource_value_default=new_resource_value_default,
+                resource_value_type=new_resource_value_type,
+            )
+
+            new_resource_dictionary_json_string = json.dumps(new_resource_dictionary)
+
+            self.database_instance.insert(new_resource_dictionary)
+        else:
+            print(f":: A resource with the name {new_resource_name} already exists!")
 
     def resource_update():
         """
@@ -148,13 +217,15 @@ class MolecularApplication:
     ipc_instance = None
     database_path: str = ""
     database_instance = None
+    database_query_instance = None
     resource_manager = None
 
     def __init__(self, database_path: str):
         self.ipc_instance = molaccesspy.ManagedConsumer("molaccess-ipc-route-test")
         self.database_path = database_path
         self.database_instance = TinyDB(database_path)
-        self.resource_manager = MolecularResourceManager(self.database_instance)
+        self.database_query_instance = Query()
+        self.resource_manager = MolecularResourceManager(self.ipc_instance, self.database_instance, self.database_query_instance)
 
     def application_on_update(data_input: str):
         print(
@@ -168,8 +239,24 @@ class MolecularApplication:
 
     def application_run(self):
         # ipc_instance.subscribe_update(self.application_on_update)
-        self.resource_manager.resource_create("Test")
-        self.resource_manager.method_call("CREATE", "Test2")
+        self.resource_manager.resource_create(
+            new_resource_name="Test",
+            new_resource_value="This is a value!",
+            new_resource_value_default="This is a default value!",
+            new_resource_value_type="string",
+        )
+
+        self.resource_manager.method_call("CREATE",
+            "Test2",
+            "This is another value!",
+            "This is another default value!",
+            "string"
+        )
+
+        # To do:
+        # - Listen for new IPC producers which attempt to establish a connection, 
+        # then create a producer in a new thread to send data back to them
+        # - Listen for messages, and call methods by matching from a JSON dictionary object
 
 
 def main():
