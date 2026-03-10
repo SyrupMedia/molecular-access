@@ -236,7 +236,10 @@ class MolecularApplication:
             f":: Called callback function.\n:: Client received the following: '{data_input}'"
         )
 
-        #data_dictionary = json.loads(str(data_input))
+        try:
+            data_dictionary = json.loads(str(data_input))
+        except json.decoder.JSONDecodeError:
+            print(":: Error: Failed to serialize JSON string into a dict object!")
 
         # To do:
         # - Parse string as JSON

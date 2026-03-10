@@ -3,6 +3,16 @@ import json
 
 import molaccesspy
 
+def message_create(method: str, arguments: str) -> dict:
+    new_message = {
+        "message": {
+            "method": str(method),
+            "arguments": str(arguments)
+        }
+    }
+
+    return new_message
+
 class CommandManager:
     commands: list = [
         "HELP",
@@ -16,20 +26,25 @@ class CommandManager:
     def __init__(self, messaging_ipc_instance):
         self.application_ipc_instance = messaging_ipc_instance
 
-
     def command_help(self):
         help_message = """
         Syntax: [COMMAND] [ARGUMENTS]
         Commands:
             'HELP' : Display this message.
-            'SEND' : Send a message to `molaccessd`. Space-seperated comments will be concatenated into a JSON string.
-            'JSEND' : Send a raw JSON string to `molaccessd`. Expects JSON syntax.
+            'SEND' : Send a message to `molaccessd`. Space-seperated arguments will be concatenated into a JSON string.
+            'JSEND' : Send a raw JSON string to `molaccessd`. Expects JSON-formatted string as argument.
             'EXIT' : Safely exits this program."""
 
         print(help_message)
 
     def command_send(self, arguments_list: list[str]):
-        self.application_ipc_instance.send_data(str(arguments_list))
+        method_argument_string = arguments_list[0]
+        arguments_string = arguments_list[1:]
+
+        message = message_create(method_argument_string, arguments_string)
+        message_json = json.dumps(message)
+
+        self.application_ipc_instance.send_data(str(message_json))
     
     def command_send_json(self, json_string):
         self.application_ipc_instance.send_data(str(json_string))
