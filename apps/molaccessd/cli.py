@@ -215,22 +215,28 @@ class MolecularResourceManager:
 
 class MolecularApplication:
     ipc_instance = None
+    ipc_instance_route: str = "molaccessd"
     database_path: str = ""
     database_instance = None
     database_query_instance = None
     resource_manager = None
 
-    def __init__(self, database_path: str):
-        self.ipc_instance = molaccesspy.ManagedConsumer("molaccess-ipc-route-test")
+    def __init__(self, database_path: str, ipc_instance_route: str = None):
+        if ipc_instance_route:
+            self.ipc_instance_route = ipc_instance_route
+
+        self.ipc_instance = molaccesspy.ManagedConsumer(self.ipc_instance_route)
         self.database_path = database_path
         self.database_instance = TinyDB(database_path)
         self.database_query_instance = Query()
         self.resource_manager = MolecularResourceManager(self.ipc_instance, self.database_instance, self.database_query_instance)
 
-    def application_on_update(data_input: str):
+    def application_on_update(self, data_input: str):
         print(
             f":: Called callback function.\n:: Client received the following: '{data_input}'"
         )
+
+        #data_dictionary = json.loads(str(data_input))
 
         # To do:
         # - Parse string as JSON
@@ -238,20 +244,21 @@ class MolecularApplication:
         # - Manipulate resources and collections
 
     def application_run(self):
-        # ipc_instance.subscribe_update(self.application_on_update)
-        self.resource_manager.resource_create(
-            new_resource_name="Test",
-            new_resource_value="This is a value!",
-            new_resource_value_default="This is a default value!",
-            new_resource_value_type="string",
-        )
+        self.ipc_instance.subscribe_update(self.application_on_update)
+        
+        #self.resource_manager.resource_create(
+        #    new_resource_name="Test",
+        #    new_resource_value="This is a value!",
+        #    new_resource_value_default="This is a default value!",
+        #    new_resource_value_type="string",
+        #)
 
-        self.resource_manager.method_call("CREATE",
-            "Test2",
-            "This is another value!",
-            "This is another default value!",
-            "string"
-        )
+        #self.resource_manager.method_call("CREATE",
+        #    "Test2",
+        #    "This is another value!",
+        #    "This is another default value!",
+        #    "string"
+        #)
 
         # To do:
         # - Listen for new IPC producers which attempt to establish a connection, 
