@@ -11,4 +11,8 @@ jobs:
     - uses: docker/build-push-action@v7.1.0
       with:
         push: false
+        tags: molaccess/molacccess-fedora-release:latest
         file: ./misc/containers/fedora/fedora-release/Dockerfile
+    - uses: addnab/docker-run-action@v3
+      with:
+        image: molaccess/molacccess-fedora-release:latest
