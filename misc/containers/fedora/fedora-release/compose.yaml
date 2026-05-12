@@ -1,0 +1,9 @@
+services:
+  dev:
+    image: molaccess/fedora-release:latest
+    build:
+      dockerfile: ./Dockerfile
+    volumes:
+      - type: bind
+        source: ../../../../.
+        target: /opt/workdir:Z
