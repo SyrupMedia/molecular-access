@@ -1,0 +1,25 @@
+name: "Format"
+on:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        submodules: recursive
+        persist-credentials: false
+        fetch-depth: 0
+    - name: Run formatters
+      run: |
+        ./misc/integration/tasks/format.sh
+    - name: Commit files
+      run: |
+        git config --local user.email "integration@molasses.love"
+        git config --local user.name "Honeybot Ant[bot]"
+        git commit -a -m "Re-formatted files"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
