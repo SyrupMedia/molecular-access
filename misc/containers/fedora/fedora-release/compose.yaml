@@ -7,3 +7,6 @@ services:
       - type: bind
         source: ../../../../.
         target: /opt/workdir
+      - type: bind
+        source: ../../../../installdir
+        target: /opt/installdir

@@ -9,16 +9,15 @@ RUN apk add --no-cache \
     musl \
     ninja-build \
     python3 \
-    python3-dev \
-    tree
+    python3-dev
 
 WORKDIR /opt/workdir
     
-CMD  tree /usr/i686-w64-mingw32/include/ > /opt/workdir/tree.txt \
-        cmake -B target/alpine/debug \
-		-D CMAKE_BUILD_TYPE=Debug \
-		-D MINGW_CROSS_COMPILATION=ON \
-		-D CMAKE_C_COMPILER=/usr/bin/x86_64-w64-mingw32-gcc \
-		-D CMAKE_CXX_COMPILER=/usr/bin/x86_64-w64-mingw32-g++ \
-		-G Ninja; \
-        cmake --build target/alpine/debug -j$(nproc)
+CMD cmake -B target/alpine/release \
+    -D CMAKE_BUILD_TYPE=Release \
+    -D MINGW_CROSS_COMPILATION=ON \
+    -D CMAKE_C_COMPILER=/usr/bin/x86_64-w64-mingw32-gcc \
+    -D CMAKE_CXX_COMPILER=/usr/bin/x86_64-w64-mingw32-g++ \
+    -G Ninja; \
+    cmake --build target/fedora/release -j$(nproc); \
+    cmake --build target/fedora/release --target=install

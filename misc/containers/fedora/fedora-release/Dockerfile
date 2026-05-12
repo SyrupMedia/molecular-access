@@ -15,7 +15,6 @@ RUN dnf install -y \
     swig
 
 # Build and install into a directory with the Makefile.
-CMD 	make swig; \
-	cmake -B target/fedora/release -D CMAKE_BUILD_TYPE=Release; \
+CMD cmake -B target/fedora/release -D CMAKE_BUILD_TYPE=Release; \
 	cmake --build target/fedora/release -j$(nproc); \
 	cmake --build target/fedora/release --target=install
