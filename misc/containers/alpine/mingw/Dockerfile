@@ -20,5 +20,5 @@ CMD cmake -B target/alpine/release \
     -D CMAKE_C_COMPILER=/usr/bin/x86_64-w64-mingw32-gcc \
     -D CMAKE_CXX_COMPILER=/usr/bin/x86_64-w64-mingw32-g++ \
     -G Ninja; \
-    cmake --build target/fedora/release -j$(nproc); \
-    cmake --build target/fedora/release --target=install
+    cmake --build target/alpine/release -j$(nproc); \
+    cmake --build target/alpine/release --target=install
