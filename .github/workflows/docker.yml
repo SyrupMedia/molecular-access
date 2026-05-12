@@ -21,12 +21,12 @@ jobs:
         submodules: recursive
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
-      run: mkdir installdir && cd misc/containers/fedora/fedora-release && docker compose up --build --force-recreate
+      run: sh misc/integration/tasks/ci_compose.sh fedora/fedora-release
     - uses: actions/upload-artifact@v7
       with:
         path: installdir
         name: Fedora build artifact
-        
+
   compose-alpine-mingw:
     runs-on: ubuntu-latest
     steps:
@@ -35,8 +35,8 @@ jobs:
         submodules: recursive
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
-      run: mkdir installdir && cd misc/containers/alpine/mingw && docker compose up --build --force-recreate
+      run: sh misc/integration/tasks/ci_compose.sh alpine/mingw
     - uses: actions/upload-artifact@v7
       with:
         path: installdir
-        name: MinGW build artifact
+        name: MinGW build artifact  
