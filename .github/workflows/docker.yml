@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: recursive
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
       run: docker compose up --build --force-recreate
@@ -14,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: recursive
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
       run: mkdir installdir && cd misc/containers/fedora/fedora-release && docker compose up --build --force-recreate
@@ -21,6 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: recursive
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
       run: mkdir installdir && cd misc/containers/alpine/mingw && docker compose up --build --force-recreate
