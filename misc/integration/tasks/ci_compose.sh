@@ -2,16 +2,20 @@
 
 set -e
 
-DIRECTORY="misc/containers/$1"
+SOURCE_ROOT="$PWD"
+CONTAINER_DIRECTORY="misc/containers/$1"
 
-if [ ! -d "$DIRECTORY" ]; then
-    exit 1
+if [ ! -d "$CONTAINER_DIRECTORY" ]; then
+	exit 1
 fi
 
 mkdir installdir
-cd "$DIRECTORY"
+
+cd "$CONTAINER_DIRECTORY"
 docker compose up --build --force-recreate
 
-if [ -z "$(ls -A "$DIRECTORY")" ]; then
+cd "$SOURCE_ROOT"
+
+if [ -z "$(ls -A "$CONTAINER_DIRECTORY")" ]; then
 	exit 1
 fi
