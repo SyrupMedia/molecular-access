@@ -6,4 +6,4 @@ services:
     volumes:
       - type: bind
         source: ../../../../.
-        target: /opt/workdir:Z
+        target: /opt/workdir
