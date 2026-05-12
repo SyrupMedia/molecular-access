@@ -9,13 +9,11 @@ ManagedProducer::ManagedProducer(const char *name) {
 }
 
 void ManagedProducer::send_data(const char *data) {
-
     ipc_instance.molecular_ipc_route->wait_for_recv(1);
 
     molecular_send(ipc_instance, data);
 
     ipc_instance.molecular_ipc_route->send(ipc::buff_t('\0'));
-
 }
 
 ManagedConsumer::ManagedConsumer(const char *name) {
@@ -23,10 +21,9 @@ ManagedConsumer::ManagedConsumer(const char *name) {
 }
 
 void listener_update(
-    molecular_ipc &molecular_ipc_target, 
-    std::function<void(const char*)> callback
-) {
-
+    molecular_ipc &                   molecular_ipc_target,
+    std::function<void(const char *)> callback
+    ) {
     while (1) {
         auto buf = molecular_ipc_target.molecular_ipc_route->recv();
         auto str = static_cast<char *>(buf.data());
@@ -40,12 +37,10 @@ void listener_update(
 }
 
 void ManagedConsumer::subscribe_update(PyObject *callback) {
-
-    std::function<void(const char*)> update = [callback](const char *data) {
-        PyObject *data_py = Py_BuildValue("(s)", data);
-        PyObject_CallObject(callback, data_py);
-    };
+    std::function<void(const char *)> update = [callback](const char *data) {
+            PyObject *data_py = Py_BuildValue("(s)", data);
+            PyObject_CallObject(callback, data_py);
+        };
 
     listener_update(ipc_instance, update);
-
 }

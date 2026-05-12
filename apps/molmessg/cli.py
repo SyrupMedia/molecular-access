@@ -3,23 +3,15 @@ import json
 
 import molaccesspy
 
+
 def message_create(method: str, arguments: str) -> dict:
-    new_message = {
-        "message": {
-            "method": str(method),
-            "arguments": str(arguments)
-        }
-    }
+    new_message = {"message": {"method": str(method), "arguments": str(arguments)}}
 
     return new_message
 
+
 class CommandManager:
-    commands: list = [
-        "HELP",
-        "SEND",
-        "JSEND",
-        "EXIT"
-    ]
+    commands: list = ["HELP", "SEND", "JSEND", "EXIT"]
 
     application_ipc_instance = None
 
@@ -45,7 +37,7 @@ class CommandManager:
         message_json = json.dumps(message)
 
         self.application_ipc_instance.send_data(str(message_json))
-    
+
     def command_send_json(self, json_string):
         self.application_ipc_instance.send_data(str(json_string))
 
@@ -58,16 +50,15 @@ class MolecularMesssagingBase:
     command_manager = None
     command_dictionary: dict[str, callable] = None
 
-
     def __init__(self):
         self.application_ipc_instance = molaccesspy.ManagedProducer("molaccessd")
         self.command_manager = CommandManager(self.application_ipc_instance)
-        
+
         self.command_dictionary: dict[str, callable] = {
-                "HELP": self.command_manager.command_help,
-                "SEND": self.command_manager.command_send,
-                "JSEND": self.command_manager.command_send_json,
-                "EXIT": self.command_manager.command_exit
+            "HELP": self.command_manager.command_help,
+            "SEND": self.command_manager.command_send,
+            "JSEND": self.command_manager.command_send_json,
+            "EXIT": self.command_manager.command_exit,
         }
 
     def call_command(self, data_input_raw: str):
@@ -86,13 +77,15 @@ class MolecularMesssagingBase:
                 # Match first element of list to command dictionary, and provide the rest of the list as arguments.
                 self.command_dictionary[command](command_arguments)
 
+
 def main():
     molecular_messaging_base_instance = MolecularMesssagingBase()
 
     while True:
         data_input_raw: str = str(input("molmessg shell: "))
-        
+
         molecular_messaging_base_instance.call_command(data_input_raw)
+
 
 if __name__ == "__main__":
     main()

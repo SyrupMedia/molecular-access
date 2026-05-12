@@ -53,7 +53,12 @@ class MolecularResourceManager:
         "CALL": None,
     }
 
-    def __init__(self, application_ipc_instance, application_database_instance, application_database_query_instance):
+    def __init__(
+        self,
+        application_ipc_instance,
+        application_database_instance,
+        application_database_query_instance,
+    ):
         self.methods = {
             "CLOSE": self.resource_close,
             "READ": self.resource_read,
@@ -141,7 +146,9 @@ class MolecularResourceManager:
         if not new_resource_value_type in self.resource_types:
             raise ValueError(f"The type '{resource_value_type}' is not supported.")
 
-        resource_query = self.database_instance.search(self.database_query_instance.resource_name == new_resource_name)
+        resource_query = self.database_instance.search(
+            self.database_query_instance.resource_name == new_resource_name
+        )
 
         if not resource_query:
             print(f":: Creating {new_resource_name}")
@@ -229,7 +236,9 @@ class MolecularApplication:
         self.database_path = database_path
         self.database_instance = TinyDB(database_path)
         self.database_query_instance = Query()
-        self.resource_manager = MolecularResourceManager(self.ipc_instance, self.database_instance, self.database_query_instance)
+        self.resource_manager = MolecularResourceManager(
+            self.ipc_instance, self.database_instance, self.database_query_instance
+        )
 
     def application_on_update(self, data_input: str):
         print(
@@ -248,23 +257,23 @@ class MolecularApplication:
 
     def application_run(self):
         self.ipc_instance.subscribe_update(self.application_on_update)
-        
-        #self.resource_manager.resource_create(
+
+        # self.resource_manager.resource_create(
         #    new_resource_name="Test",
         #    new_resource_value="This is a value!",
         #    new_resource_value_default="This is a default value!",
         #    new_resource_value_type="string",
-        #)
+        # )
 
-        #self.resource_manager.method_call("CREATE",
+        # self.resource_manager.method_call("CREATE",
         #    "Test2",
         #    "This is another value!",
         #    "This is another default value!",
         #    "string"
-        #)
+        # )
 
         # To do:
-        # - Listen for new IPC producers which attempt to establish a connection, 
+        # - Listen for new IPC producers which attempt to establish a connection,
         # then create a producer in a new thread to send data back to them
         # - Listen for messages, and call methods by matching from a JSON dictionary object
 

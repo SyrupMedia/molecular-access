@@ -15,7 +15,7 @@ void molecular_ipc_producer_wait_for_listener(molecular_ipc &molecular_ipc_produ
 
 molecular_ipc molecular_ipc_producer_create(const char *molecular_ipc_route_name_init) {
     molecular_ipc molecular_ipc_init = {
-        std::shared_ptr<ipc::route> {new ipc::route { molecular_ipc_route_name_init }},
+        std::shared_ptr<ipc::route> { new ipc::route { molecular_ipc_route_name_init } },
         molecular_ipc_route_name_init,
         PRODUCER
     };
@@ -25,7 +25,7 @@ molecular_ipc molecular_ipc_producer_create(const char *molecular_ipc_route_name
 
 molecular_ipc molecular_ipc_listener_create(const char *molecular_ipc_route_name_init) {
     molecular_ipc molecular_ipc_init = {
-        std::shared_ptr<ipc::route> {new ipc::route { molecular_ipc_route_name_init, ipc::receiver }},
+        std::shared_ptr<ipc::route> { new ipc::route { molecular_ipc_route_name_init, ipc::receiver } },
         molecular_ipc_route_name_init,
         CONSUMER
     };
@@ -34,8 +34,8 @@ molecular_ipc molecular_ipc_listener_create(const char *molecular_ipc_route_name
 }
 
 void molecular_ipc_listener_update(
-        molecular_ipc &molecular_ipc_target, 
-        void(*function_on_update)(char*)
+    molecular_ipc &molecular_ipc_target,
+    void (         *function_on_update )(char *)
     ) {
     std::printf("Running update cycle.\n");
 
