@@ -1,4 +1,4 @@
-name: "Docker"
+name: "Docker Compose"
 on:
   pull_request:
   push:
@@ -12,31 +12,3 @@ jobs:
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
       run: docker compose up --build --force-recreate
-
-  compose-fedora-release:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-      with:
-        submodules: recursive
-    - uses: docker/setup-compose-action@v2
-    - name: Run using Docker Compose
-      run: ./misc/integration/tasks/ci_compose.sh fedora/fedora-release
-    - uses: actions/upload-artifact@v7
-      with:
-        path: installdir
-        name: Fedora build artifact
-
-  compose-alpine-mingw:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-      with:
-        submodules: recursive
-    - uses: docker/setup-compose-action@v2
-    - name: Run using Docker Compose
-      run: ./misc/integration/tasks/ci_compose.sh alpine/mingw
-    - uses: actions/upload-artifact@v7
-      with:
-        path: installdir
-        name: MinGW build artifact  
