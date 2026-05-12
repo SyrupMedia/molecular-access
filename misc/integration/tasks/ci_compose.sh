@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-set -e
+set -euxo pipefail
 
 SOURCE_ROOT="$PWD"
 CONTAINER_DIRECTORY="misc/containers/$1"
