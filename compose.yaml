@@ -1,0 +1,12 @@
+services:
+  dev:
+    image: molaccessdev
+    build:
+      dockerfile: ./Dockerfile
+    volumes:
+      - type: bind
+        source: ./
+        target: /opt/workdir:Z
+    stdin_open: true
+    tty: true
+    command: /bin/sh -c "nix develop"

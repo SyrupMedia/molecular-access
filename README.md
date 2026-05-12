@@ -53,6 +53,30 @@ Please ensure you clone the repository recursively, as it uses submodules.
 
 ## Building
 
+### Dev Environments
+
+We provide several options for preconfigured development environments which allow you to avoid manually installing development dependencies globally on your system. They both require that you have either Docker or Podman installed on your system.
+
+#### Option 1: Nix Flake (optionally with Direnv)
+
+If you have Nix installed on your system and configured with flake support, you can simply run `nix develop` in the project directory to spin up a shell environment with all needed dependencies. If you have Direnv installed as well the environment should load automatically, and you can even use the [VS Code Direnv extension](https://marketplace.visualstudio.com/items?itemName=mkhl.direnv) to integrate the flake environment with VS Code for intellisense and CMake commands support.
+
+#### Option 2: VS Code Development Container
+
+This is the most convenient option overall if you are willing to use VS Code. This setup provides C++ and Python intellisense as well as in-editor integration with CMake commands. Simply make sure that you have the [Dev Containers extension installed](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers), and then open the project folder in VS Code. You will be prompted to re-open the project in the development container, simply click "Reopen in to begin loading the container. It will likely take several minutes for the container to build the first time you load it, this is normal (eventually we may provide pre-built container images that will make this quicker). Once VS Code finishes launching and connecting to the container, you should see a pop-up message from the Direnv extension asking if you would like to reload the environment, make sure to accept. If VS Code notifies you of a CMake error, this is likely the result of the CMake extension trying to configure before the Direnv extension has properly loaded the environment. In this case simply open a terminal, run `make clean` and `make release` and then close and re-open VS Code.
+
+#### Option 3: Generic Development Container
+
+If you do not want to use VS Code, you can instead use the generic development container (you must have either Docker Compose or Podman Compose installed to use this):
+
+- For an ephemeral container: `docker-compose run --rm dev` or `podman-compose run --rm dev`.
+
+OR
+
+- For a re-useable container: `docker-compose up -d dev && docker attach molecular-access_dev_1`, or `podman-compose up -d dev && podman attach molecular-access_dev_1`.
+
+This container will share the contents of the project directory with your system, so any file edits that you make to project files outside the container will be propogated inside the container, and vice versa.
+
 ### Dependencies
 
 The only internal build dependency is [`libipc`](https://github.com/mutouyun/cpp-ipc),

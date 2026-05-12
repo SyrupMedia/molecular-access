@@ -1,0 +1,53 @@
+{
+  "build": {
+    "dockerfile": "./Dockerfile",
+    "context": "../",
+    "args": {},
+    "options": [
+      "--security-opt",
+      "label=disable"
+    ]
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/nix:1": {
+      "packages": "git",
+      "extraNixConfig": "experimental-features = nix-command flakes"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // TODO: perhaps this can go in .vscode/c_cpp_properties.json as a named configuration once things are more stabilized
+        "C_Cpp.default": {
+          "includePath": [
+            "${workspaceFolder}/**"
+          ],
+          "compileCommands": [
+            "${workspaceFolder}/target/release/compile_commands.json"
+          ],
+          "compilerPath": "gcc",
+          "cStandard": "c17",
+          "cppStandard": "gnu++17"
+        }
+      },
+      "extensions": [
+        "ms-vscode.cpptools-extension-pack",
+        "ms-python.python",
+        // TODO: replace direnv with nix develop or shell based server invocation
+        "mkhl.direnv"
+      ]
+    }
+  },
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "uname -a",
+  // Replace when using a ptrace-based debugger like C++, Go, and Rust
+  // "runArgs": [ "--init", "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
+  "runArgs": [
+    "--security-opt",
+    "label=disable"
+  ],
+  // Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "vscode"
+}
