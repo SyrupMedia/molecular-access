@@ -17,5 +17,6 @@ docker compose up --build --force-recreate
 cd "$SOURCE_ROOT"
 
 if [ -z "$(ls -A "$CONTAINER_DIRECTORY")" ]; then
+    echo ":: $CONTAINER_DIRECTORY is empty!"
 	exit 1
 fi

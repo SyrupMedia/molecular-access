@@ -21,7 +21,7 @@ jobs:
         submodules: recursive
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
-      run: bash misc/integration/tasks/ci_compose.sh fedora/fedora-release
+      run: ./misc/integration/tasks/ci_compose.sh fedora/fedora-release
     - uses: actions/upload-artifact@v7
       with:
         path: installdir
@@ -35,7 +35,7 @@ jobs:
         submodules: recursive
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
-      run: bash misc/integration/tasks/ci_compose.sh alpine/mingw
+      run: ./misc/integration/tasks/ci_compose.sh alpine/mingw
     - uses: actions/upload-artifact@v7
       with:
         path: installdir
