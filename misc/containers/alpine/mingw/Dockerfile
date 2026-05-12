@@ -4,13 +4,14 @@ ENV PATH=/opt/vlang:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 RUN apk add --no-cache \
     cmake \
-    make \
+    make \ 
     mingw-w64-gcc \
     mingw-w64-headers \
     musl \
     ninja-build \
     python3 \
-    python3-dev
+    python3-dev \
+    swig
 
 WORKDIR /opt/workdir
     

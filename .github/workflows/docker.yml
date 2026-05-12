@@ -12,6 +12,7 @@ jobs:
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
       run: docker compose up --build --force-recreate
+
   compose-fedora-release:
     runs-on: ubuntu-latest
     steps:
@@ -21,6 +22,11 @@ jobs:
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
       run: mkdir installdir && cd misc/containers/fedora/fedora-release && docker compose up --build --force-recreate
+    - uses: actions/upload-artifact@v7
+      with:
+        path: installdir
+        name: Fedora build artifact
+        
   compose-alpine-mingw:
     runs-on: ubuntu-latest
     steps:
@@ -30,3 +36,7 @@ jobs:
     - uses: docker/setup-compose-action@v2
     - name: Run using Docker Compose
       run: mkdir installdir && cd misc/containers/alpine/mingw && docker compose up --build --force-recreate
+    - uses: actions/upload-artifact@v7
+      with:
+        path: installdir
+        name: MinGW build artifact
