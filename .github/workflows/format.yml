@@ -12,6 +12,9 @@ jobs:
         fetch-depth: 0
     - name: Run formatters
       run: |
+        apt-get install -y black uncrustify
+    - name: Run formatters
+      run: |
         ./misc/integration/tasks/format.sh
     - name: Commit files
       run: |
