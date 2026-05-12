@@ -9,4 +9,4 @@ jobs:
     - uses: actions/checkout@v6
     - uses: docker/setup-buildx-action@v4
       with:
-        file: ./ misc/containers/fedora/fedora-release/Dockerfile
+        file: ./misc/containers/fedora/fedora-release/Dockerfile
