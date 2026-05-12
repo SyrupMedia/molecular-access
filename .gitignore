@@ -60,6 +60,7 @@ __pycache__/
 [Rr]esult/*
 [Tt]arget/*
 installdir
+result
 
 # Bindings are auto-generated, best to ignore them to avoid confusion.
 core/src/bindings/*

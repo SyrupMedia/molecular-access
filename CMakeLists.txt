@@ -17,6 +17,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 set(COMPILE_WARNING_AS_ERROR ON)
 
+option(MOLACCESS_NATIVE_LIBRARIES OFF)
+
 option(MOLACCESS_BUILD_TESTS OFF)
 
 option(MOLACCESS_MINGW_CROSS_COMPILATION OFF)
@@ -32,9 +34,12 @@ option(MOLACCESS_MINGW_CROSS_COMPILATION OFF)
 
 add_compile_definitions(SWIG_PYTHON_INTERPRETER_NO_DEBUG)
 
-add_subdirectory(libs/submodules/libipc)
-
-get_target_property(IPC_INCLUDES ipc INCLUDE_DIRECTORIES)
+if(NOT MOLACCESS_NATIVE_LIBRARIES)
+    add_subdirectory(libs/submodules/libipc)
+    get_target_property(IPC_INCLUDES ipc INCLUDE_DIRECTORIES)
+else()
+    find_package(ipc)
+endif()
 
 macro(link TARGET)
     target_link_libraries(${TARGET}
@@ -42,7 +47,7 @@ macro(link TARGET)
     )
 
     target_include_directories(${TARGET} PUBLIC ${IPC_INCLUDES} core/include)
-endmacro()
+endmacro()  
 
 add_subdirectory(core)
 
