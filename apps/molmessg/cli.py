@@ -1,5 +1,7 @@
+import argparse
 import sys
 import json
+import os
 
 import molaccesspy
 
@@ -49,6 +51,8 @@ class MolecularMesssagingBase:
     application_ipc_instance = None
     command_manager = None
     command_dictionary: dict[str, callable] = None
+    should_loop = True
+    arguments = None
 
     def __init__(self):
         self.application_ipc_instance = molaccesspy.ManagedProducer("molaccessd")
@@ -62,6 +66,9 @@ class MolecularMesssagingBase:
         }
 
     def call_command(self, data_input_raw: str):
+        if not data_input_raw or len(data_input_raw) < 1:
+            return
+
         data_input = data_input_raw.split()
         command = data_input[0]
         command_arguments = data_input[1:]
@@ -77,14 +84,41 @@ class MolecularMesssagingBase:
                 # Match first element of list to command dictionary, and provide the rest of the list as arguments.
                 self.command_dictionary[command](command_arguments)
 
+    def arguments_create(self):
+        argument_parser = argparse.ArgumentParser(
+            prog="molmessg",
+            description="An interactive interpreter shell (REPL) for Molecular, allowing you to send IPC messages to processes connected to molaccessd.",
+        )
+        argument_parser.add_argument(
+            "-c",
+            "--command",
+            help="Pass a string to be interpreted; similar to `bash -c`, `python -c`, etc.",
+        )
+        self.arguments = argument_parser.parse_args()
+
+    def message(self):
+        if self.should_loop:
+            while self.should_loop:
+                data_input_raw: str = str(input("molmessg shell: "))
+
+                self.call_command(data_input_raw)
+        else:
+            self.call_command(str(self.arguments.command))
+
 
 def main():
+    print(f":: Running with PID `{os.getpid()}`.")
+
     molecular_messaging_base_instance = MolecularMesssagingBase()
+    molecular_messaging_base_instance.arguments_create()
 
-    while True:
-        data_input_raw: str = str(input("molmessg shell: "))
+    if molecular_messaging_base_instance.arguments.command:
+        molecular_messaging_base_instance.should_loop = False
 
-        molecular_messaging_base_instance.call_command(data_input_raw)
+    try:
+        molecular_messaging_base_instance.message()
+    except KeyboardInterrupt:
+        molecular_messaging_base_instance.should_loop = False
 
 
 if __name__ == "__main__":
