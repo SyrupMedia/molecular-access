@@ -1,0 +1,33 @@
+name: "Main"
+on:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        submodules: recursive
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install swig cmake clang python3 python3-dev python3-pip
+        pip --no-input install tinydb
+    - name: Build
+      run: |
+        make release -j$(nproc)
+    - name: Sanity check
+      run: |
+        cd target/release/tests
+        ./sanity
+        ./route
+        cd ../
+    - name: Python Client/Server (Integration Tests)
+      run: |
+        cd tests/python
+        python3 server.py &
+        python3 client.py
+    - name: molaccessd & molmessg (Integration Tests)
+      run: |
+        python3 molaccessd_test.py &
+        python3 molmessg_test.py -c "SEND CREATE Test"
