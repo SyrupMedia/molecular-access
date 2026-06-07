@@ -7,6 +7,10 @@
 ![MinGW GitHub Action Workflow Status](https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/mingw.yml?style=for-the-badge&logo=mingww64&color=70a5d8&logoColor=FFFFFF&labelColor=262a35&label=MINGW%20BUILD)
 ![Nix GitHub Action Workflow Status](https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/nix.yml?style=for-the-badge&logo=nixos&color=70a5d8&logoColor=FFFFFF&labelColor=262a35&label=NIX%20BUILD)
 
+[![Ko-Fi](https://img.shields.io/badge/donate-kofi-blue?style=for-the-badge&logo=ko-fi&color=e57578&logoColor=FFFFFF&labelColor=262a35)](https://ko-fi.com/molasses)
+[![Patreon](https://img.shields.io/badge/donate-patreon-blue?style=for-the-badge&logo=patreon&color=e57578&logoColor=FFFFFF&labelColor=262a35)](https://www.patreon.com/molasseslover)
+
+
 This is a free and open-source accessibility interface, designed with real-time
 (rendering) applications, such as games, in mind.
 
