@@ -1,6 +1,6 @@
 # The 3-Clause BSD License
 
-*Copyright © 2025, Maeve Garside*
+*Copyright © 2026, Maeve Garside*
 
 *All rights reserved.*
 
