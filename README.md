@@ -2,8 +2,16 @@
 [![Ko-Fi](https://img.shields.io/badge/donate-kofi-blue?style=for-the-badge&logo=ko-fi&color=e57578&logoColor=FFFFFF&labelColor=262a35)](https://ko-fi.com/molasses)
 [![Patreon](https://img.shields.io/badge/donate-patreon-blue?style=for-the-badge&logo=patreon&color=e57578&logoColor=FFFFFF&labelColor=262a35)](https://www.patreon.com/molasseslover)
 
+-------------------------------------------------------------------------------
+
 [![Source code](https://img.shields.io/badge/source-codeberg-blue?style=for-the-badge&logo=codeberg&color=84b9c9&logoColor=FFFFFF&labelColor=262a35)](https://codeberg.org/SyrupMedia/molecular-access)
 [![Source mirror](https://img.shields.io/badge/source%20mirror-github-red?style=for-the-badge&logo=github&color=c58dda&logoColor=FFFFFF&labelColor=262a35)](https://github.com/SyrupMedia/molecular-access)
+
+-------------------------------------------------------------------------------
+
+[![Discord](https://img.shields.io/badge/chat-discord-blue?style=for-the-badge&logo=discord&color=c58dda&logoColor=FFFFFF&labelColor=262a35)](https://www.patreon.com/molasseslover)
+
+-------------------------------------------------------------------------------
 
 ![Docker GitHub Action Workflow Status](https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/docker.yml?style=for-the-badge&logo=docker&color=70a5d8&logoColor=FFFFFF&labelColor=262a35&label=DOCKER%20BUILD)
 ![Fedora GitHub Action Workflow Status](https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/fedora.yml?style=for-the-badge&logo=fedora&color=70a5d8&logoColor=FFFFFF&labelColor=262a35&label=FEDORA%20BUILD)
