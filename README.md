@@ -1,22 +1,19 @@
-# Molecular Access
-[![Ko-Fi](https://img.shields.io/badge/donate-kofi-blue?style=for-the-badge&logo=ko-fi&color=e57578&logoColor=FFFFFF&labelColor=262a35)](https://ko-fi.com/molasses)
-[![Patreon](https://img.shields.io/badge/donate-patreon-blue?style=for-the-badge&logo=patreon&color=e57578&logoColor=FFFFFF&labelColor=262a35)](https://www.patreon.com/molasseslover)
+<html>
+<center>
+<h1>Molecular Access</h1>
+<a href="https://codeberg.org/SyrupMedia/molecular-access"><img src="https://img.shields.io/badge/source-codeberg-blue?style=for-the-badge&amp;logo=codeberg&amp;color=84b9c9&amp;logoColor=FFFFFF&amp;labelColor=262a35" alt="Source code"></a>
+<a href="https://github.com/SyrupMedia/molecular-access"><img src="https://img.shields.io/badge/source%20mirror-github-red?style=for-the-badge&amp;logo=github&amp;color=c58dda&amp;logoColor=FFFFFF&amp;labelColor=262a35" alt="Source mirror"></a>
 
--------------------------------------------------------------------------------
+<p><img src="https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/docker.yml?style=for-the-badge&amp;logo=docker&amp;color=70a5d8&amp;logoColor=FFFFFF&amp;labelColor=262a35&amp;label=DOCKER%20BUILD" alt="Docker GitHub Action Workflow Status">
+<img src="https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/fedora.yml?style=for-the-badge&amp;logo=fedora&amp;color=70a5d8&amp;logoColor=FFFFFF&amp;labelColor=262a35&amp;label=FEDORA%20BUILD" alt="Fedora GitHub Action Workflow Status">
+<img src="https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/mingw.yml?style=for-the-badge&amp;logo=mingww64&amp;color=70a5d8&amp;logoColor=FFFFFF&amp;labelColor=262a35&amp;label=MINGW%20BUILD" alt="MinGW GitHub Action Workflow Status">
+<img src="https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/nix.yml?style=for-the-badge&amp;logo=nixos&amp;color=70a5d8&amp;logoColor=FFFFFF&amp;labelColor=262a35&amp;label=NIX%20BUILD" alt="Nix GitHub Action Workflow Status"></p>
 
-[![Source code](https://img.shields.io/badge/source-codeberg-blue?style=for-the-badge&logo=codeberg&color=84b9c9&logoColor=FFFFFF&labelColor=262a35)](https://codeberg.org/SyrupMedia/molecular-access)
-[![Source mirror](https://img.shields.io/badge/source%20mirror-github-red?style=for-the-badge&logo=github&color=c58dda&logoColor=FFFFFF&labelColor=262a35)](https://github.com/SyrupMedia/molecular-access)
-
--------------------------------------------------------------------------------
-
-[![Discord](https://img.shields.io/badge/chat-discord-blue?style=for-the-badge&logo=discord&color=c58dda&logoColor=FFFFFF&labelColor=262a35)](https://www.patreon.com/molasseslover)
-
--------------------------------------------------------------------------------
-
-![Docker GitHub Action Workflow Status](https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/docker.yml?style=for-the-badge&logo=docker&color=70a5d8&logoColor=FFFFFF&labelColor=262a35&label=DOCKER%20BUILD)
-![Fedora GitHub Action Workflow Status](https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/fedora.yml?style=for-the-badge&logo=fedora&color=70a5d8&logoColor=FFFFFF&labelColor=262a35&label=FEDORA%20BUILD)
-![MinGW GitHub Action Workflow Status](https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/mingw.yml?style=for-the-badge&logo=mingww64&color=70a5d8&logoColor=FFFFFF&labelColor=262a35&label=MINGW%20BUILD)
-![Nix GitHub Action Workflow Status](https://img.shields.io/github/actions/workflow/status/SyrupMedia/molecular-access/nix.yml?style=for-the-badge&logo=nixos&color=70a5d8&logoColor=FFFFFF&labelColor=262a35&label=NIX%20BUILD)
+<p><a href="https://ko-fi.com/molasses"><img src="https://img.shields.io/badge/donate-kofi-blue?style=for-the-badge&amp;logo=ko-fi&amp;color=e57578&amp;logoColor=FFFFFF&amp;labelColor=262a35" alt="Ko-Fi"></a>
+<a href="https://www.patreon.com/molasseslover"><img src="https://img.shields.io/badge/donate-patreon-blue?style=for-the-badge&amp;logo=patreon&amp;color=e57578&amp;logoColor=FFFFFF&amp;labelColor=262a35" alt="Patreon"></a> 
+<a href="https://discord.gg/x8GgFqDUby"><img src="https://img.shields.io/badge/chat-discord-blue?style=for-the-badge&amp;logo=discord&amp;color=c58dda&amp;logoColor=FFFFFF&amp;labelColor=262a35" alt="Discord"></a>
+</center>
+</html></p>
 
 -------------------------------------------------------------------------------
 
