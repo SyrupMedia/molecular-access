@@ -1,4 +1,3 @@
-<html>
 <center>
 <h1>Molecular Access</h1>
 <a href="https://codeberg.org/SyrupMedia/molecular-access"><img src="https://img.shields.io/badge/source-codeberg-blue?style=for-the-badge&amp;logo=codeberg&amp;color=84b9c9&amp;logoColor=FFFFFF&amp;labelColor=262a35" alt="Source code"></a>
@@ -11,9 +10,8 @@
 
 <p><a href="https://ko-fi.com/molasses"><img src="https://img.shields.io/badge/donate-kofi-blue?style=for-the-badge&amp;logo=ko-fi&amp;color=e57578&amp;logoColor=FFFFFF&amp;labelColor=262a35" alt="Ko-Fi"></a>
 <a href="https://www.patreon.com/molasseslover"><img src="https://img.shields.io/badge/donate-patreon-blue?style=for-the-badge&amp;logo=patreon&amp;color=e57578&amp;logoColor=FFFFFF&amp;labelColor=262a35" alt="Patreon"></a> 
-<a href="https://discord.gg/x8GgFqDUby"><img src="https://img.shields.io/badge/chat-discord-blue?style=for-the-badge&amp;logo=discord&amp;color=c58dda&amp;logoColor=FFFFFF&amp;labelColor=262a35" alt="Discord"></a>
+<a href="https://discord.gg/x8GgFqDUby"><img src="https://img.shields.io/badge/chat-discord-blue?style=for-the-badge&amp;logo=discord&amp;color=c58dda&amp;logoColor=FFFFFF&amp;labelColor=262a35" alt="Discord"></a></p>
 </center>
-</html></p>
 
 -------------------------------------------------------------------------------
 
