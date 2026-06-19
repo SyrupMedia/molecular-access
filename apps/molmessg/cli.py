@@ -6,8 +6,9 @@ import os
 import molaccesspy
 
 
-def message_create(method: str, arguments: str) -> dict:
-    new_message = {"message": {"method": str(method), "arguments": str(arguments)}}
+def message_create(method: str, argument_dictionary: dict) -> dict:
+    print(argument_dictionary)
+    new_message = {"message": {"method": str(method), "arguments": argument_dictionary}}
 
     return new_message
 
@@ -31,11 +32,8 @@ class CommandManager:
 
         print(help_message)
 
-    def command_send(self, arguments_list: list[str]):
-        method_argument_string = arguments_list[0]
-        arguments_string = arguments_list[1:]
-
-        message = message_create(method_argument_string, arguments_string)
+    def command_send(self, method_argument_string, argument_dictionary):
+        message = message_create(method_argument_string, argument_dictionary)
         message_json = json.dumps(message)
 
         self.application_ipc_instance.send_data(str(message_json))
@@ -71,8 +69,13 @@ class MolecularMesssagingBase:
 
         data_input = data_input_raw.split()
         command = data_input[0]
-        command_arguments = data_input[1:]
+        command_arguments = data_input[2:]
+        command_arguments_dictionary = {}
 
+        for argument in command_arguments:
+            argument = argument.split('=')
+            command_arguments_dictionary[argument[0]] = argument[1]
+        
         if command not in self.command_manager.commands:
             self.command_manager.command_help()
         else:
@@ -80,6 +83,8 @@ class MolecularMesssagingBase:
                 self.command_manager.command_help()
             elif command == "EXIT":
                 self.command_manager.command_exit()
+            elif command == "SEND":
+                self.command_manager.command_send(data_input[1], command_arguments_dictionary)
             else:
                 # Match first element of list to command dictionary, and provide the rest of the list as arguments.
                 self.command_dictionary[command](command_arguments)
@@ -107,7 +112,7 @@ class MolecularMesssagingBase:
 
 
 def main():
-    print(f":: Running with PID `{os.getpid()}`.")
+    print(f":: Running `molmessg` with PID `{os.getpid()}`.")
 
     molecular_messaging_base_instance = MolecularMesssagingBase()
     molecular_messaging_base_instance.arguments_create()
