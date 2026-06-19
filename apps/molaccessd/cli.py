@@ -82,7 +82,7 @@ class MolecularProcedureArguments:
                             "resource_procedures_allowed"
                         ]
                     case "resource_name":
-                        self.resource_name  = argument_dictionary["resource_name"]
+                        self.resource_name = argument_dictionary["resource_name"]
                     case "resource_state_callable":
                         self.resource_state_callable = argument_dictionary[
                             "resource_state_callable"

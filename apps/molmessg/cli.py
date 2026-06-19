@@ -73,9 +73,9 @@ class MolecularMesssagingBase:
         command_arguments_dictionary = {}
 
         for argument in command_arguments:
-            argument = argument.split('=')
+            argument = argument.split("=")
             command_arguments_dictionary[argument[0]] = argument[1]
-        
+
         if command not in self.command_manager.commands:
             self.command_manager.command_help()
         else:
@@ -84,7 +84,9 @@ class MolecularMesssagingBase:
             elif command == "EXIT":
                 self.command_manager.command_exit()
             elif command == "SEND":
-                self.command_manager.command_send(data_input[1], command_arguments_dictionary)
+                self.command_manager.command_send(
+                    data_input[1], command_arguments_dictionary
+                )
             else:
                 # Match first element of list to command dictionary, and provide the rest of the list as arguments.
                 self.command_dictionary[command](command_arguments)
