@@ -18,6 +18,7 @@ import molaccesspy
 
 from tinydb import TinyDB, Query
 
+
 class MolecularDaemonConnectionThread(threading.Thread):
     def __init__(self, ipc_instance_route, messaging_queue, args=(), kwargs=None):
         threading.Thread.__init__(self, args=(), kwargs=None)
@@ -41,7 +42,7 @@ class MolecularDaemonConnectionThread(threading.Thread):
 
         #     if queue_message is None: # A None value will close the thread.
         #         break
-                
+
         #     print(queue_message)
 
         # To do: Make `molmessg` create a consumer thread.
@@ -53,14 +54,15 @@ class MolecularDaemonConnection:
     resource_collection: str = ""
     ipc_producer_thread: MolecularDaemonConnectionThread = None
     messaging_queue: Queue = None
-    
 
     def __init__(self, ipc_instance_route, resource_collection):
         self.resource_collection = resource_collection
         self.ipc_instance_route = ipc_instance_route
         self.messaging_queue = Queue()
-        
-        self.ipc_producer_thread = MolecularDaemonConnectionThread(ipc_instance_route, self.messaging_queue)
+
+        self.ipc_producer_thread = MolecularDaemonConnectionThread(
+            ipc_instance_route, self.messaging_queue
+        )
 
     def connection_start(self):
         self.ipc_producer_thread.start()
@@ -511,7 +513,6 @@ class MolecularDaemon:
         self.arguments = argument_parser.parse_args()
 
         self.ipc_instance_route = self.arguments.route
-
 
     def application_on_update(self, data_input: str):
         """

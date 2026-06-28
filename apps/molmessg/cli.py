@@ -41,7 +41,7 @@ class CommandManager:
         # If it does, create one in a new thread with the route passed in the message
         # The route specified should never equal `molaccessd`, and `molaccessd`'s
         # newly created ManagedProducer should send data back to the route specified
-        # by the message sent from `molmessg`.   
+        # by the message sent from `molmessg`.
 
         self.application_ipc_instance.send_data(str(message_json))
 
@@ -60,9 +60,10 @@ class MolecularMesssagingBase:
     arguments = None
     ipc_instance_route: str = "molaccessd"
 
-
     def __init__(self):
-        self.application_ipc_instance = molaccesspy.ManagedProducer(self.ipc_instance_route)
+        self.application_ipc_instance = molaccesspy.ManagedProducer(
+            self.ipc_instance_route
+        )
         self.command_manager = CommandManager(self.application_ipc_instance)
 
         self.command_dictionary: dict[str, callable] = {
