@@ -2,6 +2,7 @@ import argparse
 import sys
 import json
 import os
+import threading
 
 import molaccesspy
 
@@ -36,6 +37,12 @@ class CommandManager:
         message = message_create(method_argument_string, argument_dictionary)
         message_json = json.dumps(message)
 
+        # To do: Check if the procedure call to be sent out requires a ManagedConsumer
+        # If it does, create one in a new thread with the route passed in the message
+        # The route specified should never equal `molaccessd`, and `molaccessd`'s
+        # newly created ManagedProducer should send data back to the route specified
+        # by the message sent from `molmessg`.   
+
         self.application_ipc_instance.send_data(str(message_json))
 
     def command_send_json(self, json_string):
@@ -51,9 +58,11 @@ class MolecularMesssagingBase:
     command_dictionary: dict[str, callable] = None
     should_loop = True
     arguments = None
+    ipc_instance_route: str = "molaccessd"
+
 
     def __init__(self):
-        self.application_ipc_instance = molaccesspy.ManagedProducer("molaccessd")
+        self.application_ipc_instance = molaccesspy.ManagedProducer(self.ipc_instance_route)
         self.command_manager = CommandManager(self.application_ipc_instance)
 
         self.command_dictionary: dict[str, callable] = {
@@ -101,7 +110,16 @@ class MolecularMesssagingBase:
             "--command",
             help="Pass a string to be interpreted; similar to `bash -c`, `python -c`, etc.",
         )
+        argument_parser.add_argument(
+            "-r",
+            "--route",
+            default="molaccessd",
+            help="The IPC route which should be used for communications. This value must be the same across any process using Molecular! Changing this value is NOT recommended.",
+        )
+
         self.arguments = argument_parser.parse_args()
+
+        self.ipc_instance_route = self.arguments.route
 
     def message(self):
         if self.should_loop:

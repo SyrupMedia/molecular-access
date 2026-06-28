@@ -35,7 +35,7 @@ molecular_ipc molecular_ipc_listener_create(const char *molecular_ipc_route_name
 
 void molecular_ipc_listener_update(
     molecular_ipc &molecular_ipc_target,
-    void (         *function_on_update )(char *)
+    void           (*function_on_update)(char *)
     ) {
     std::printf("Running update cycle.\n");
 

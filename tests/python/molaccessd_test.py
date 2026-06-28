@@ -8,8 +8,10 @@ if not append_import_directory():
     sys.exit(1)
 else:
     import molaccesspy
-    
-    sys.path.append(f"{TestData.script_directory}/{TestData.depth_traversal_string}/apps")
+
+    sys.path.append(
+        f"{TestData.script_directory}/{TestData.depth_traversal_string}/apps"
+    )
 
     import molaccessd
     from molaccessd import cli

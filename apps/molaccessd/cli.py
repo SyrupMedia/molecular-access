@@ -5,13 +5,66 @@ The entrypoint for the `molaccessd` process, meant to be run as an executable.
 This file should not be imported as a module.
 """
 
+import argparse
 import os
 import datetime
 import json
+import threading
+
+from dataclasses import dataclass
+from queue import Queue
 
 import molaccesspy
 
 from tinydb import TinyDB, Query
+
+class MolecularDaemonConnectionThread(threading.Thread):
+    def __init__(self, ipc_instance_route, messaging_queue, args=(), kwargs=None):
+        threading.Thread.__init__(self, args=(), kwargs=None)
+
+        self.ipc_instance_route = ipc_instance_route
+        self.messaging_queue = messaging_queue
+
+    def run(self):
+        """
+        This is the target entrypoint for threads generated using the
+        `ANNOUNCE` procedure. It maintains an IPC producer in order to send
+        messages back to announced connections.
+        """
+
+        ipc_instance = molaccesspy.ManagedProducer(self.ipc_instance_route)
+
+        print(f":: Created new producer thread on route `{self.ipc_instance_route}`.")
+
+        # while True:
+        #     queue_message = self.messaging_queue.get()
+
+        #     if queue_message is None: # A None value will close the thread.
+        #         break
+                
+        #     print(queue_message)
+
+        # To do: Make `molmessg` create a consumer thread.
+        ipc_instance.send_data("Meow")
+
+
+class MolecularDaemonConnection:
+    ipc_instance_route: str = ""
+    resource_collection: str = ""
+    ipc_producer_thread: MolecularDaemonConnectionThread = None
+    messaging_queue: Queue = None
+    
+
+    def __init__(self, ipc_instance_route, resource_collection):
+        self.resource_collection = resource_collection
+        self.ipc_instance_route = ipc_instance_route
+        self.messaging_queue = Queue()
+        
+        self.ipc_producer_thread = MolecularDaemonConnectionThread(ipc_instance_route, self.messaging_queue)
+
+    def connection_start(self):
+        self.ipc_producer_thread.start()
+        self.ipc_producer_thread.join()
 
 
 class MolecularProcedureArguments:
@@ -28,6 +81,7 @@ class MolecularProcedureArguments:
         "resource_procedures_allowed": "ALL",
         "resource_procedures_provided": [],
         "resource_name": "",
+        "connection_route": "",
         "resource_state_callable": False,
         "resource_state_locked": True,
         "resource_value": None,
@@ -46,6 +100,7 @@ class MolecularProcedureArguments:
             "resource_procedures_allowed": self.resource_procedures_allowed,
             "resource_procedures_provided": self.resource_procedures_provided,
             "resource_name": self.resource_name,
+            "connection_route": self.connection_route,
             "resource_state_callable": self.resource_state_callable,
             "resource_state_locked": self.resource_state_locked,
             "resource_value": self.resource_value,
@@ -83,6 +138,8 @@ class MolecularProcedureArguments:
                         ]
                     case "resource_name":
                         self.resource_name = argument_dictionary["resource_name"]
+                    case "connection_route":
+                        self.connection_route = argument_dictionary["connection_route"]
                     case "resource_state_callable":
                         self.resource_state_callable = argument_dictionary[
                             "resource_state_callable"
@@ -108,6 +165,7 @@ class MolecularProcedureArguments:
         resource_procedures_allowed: str = "ALL",
         resource_procedures_provided: list = None,
         resource_name: str = "",
+        connection_route: str = "",
         resource_state_callable: bool = False,
         resource_state_locked: bool = False,
         resource_value: any = None,
@@ -118,6 +176,7 @@ class MolecularProcedureArguments:
         self.resource_procedures_allowed = resource_procedures_allowed
         self.resource_procedures_provided = resource_procedures_provided
         self.resource_name = resource_name
+        self.connection_route = connection_route
         self.resource_state_callable = resource_state_callable
         self.resource_state_locked = resource_state_locked
         self.resource_value = resource_value
@@ -131,15 +190,17 @@ class MolecularResourceManager:
     core of `molaccessd`.
     """
 
+    ipc_connections: dict[str:MolecularDaemonConnection]
+
     application_ipc_instance = None
     database_instance = None
     database_query_instance = None
 
     resource_keys: list[str] = [
         "resource_collection",
+        "resource_name",
         "resource_procedures_allowed",
         "resource_procedures_provided",
-        "resource_name",
         "resource_state_callable",
         "resource_state_locked",
         "resource_time_creation",
@@ -158,6 +219,7 @@ class MolecularResourceManager:
     }
 
     procedures: dict[str, callable] = {
+        "ANNOUNCE": None,
         "CLOSE": None,
         "READ": None,
         "CREATE": None,
@@ -177,6 +239,7 @@ class MolecularResourceManager:
         application_database_query_instance,
     ):
         self.procedures = {
+            "ANNOUNCE": self.resource_announce,
             "CLOSE": self.resource_close,
             "READ": self.resource_read,
             "CREATE": self.resource_create,
@@ -262,16 +325,41 @@ class MolecularResourceManager:
 
         return new_resource_dictionary
 
+    def resource_announce(
+        self, molecular_procedure_arguments: MolecularProcedureArguments
+    ):
+        """
+        This procedure will notify the receiving connection to start a route,
+        and request traffic to and from the sender.
+        """
+
+        molecular_daemon_connection = MolecularDaemonConnection(
+            ipc_instance_route=molecular_procedure_arguments.connection_route,
+            resource_collection=molecular_procedure_arguments.resource_collection,
+        )
+
+        molecular_daemon_connection.connection_start()
+
     def resource_close(self):
         """
         This procedure will notify the receiving connection to close its route, and
         end all traffic with the sender.
         """
 
-    def resource_read(self):
+    def resource_read(self, molecular_procedure_arguments: MolecularProcedureArguments):
         """
         Requests the value of a resource.
         """
+
+        resource_query = self.database_instance.search(
+            self.database_query_instance.resource_name
+            == molecular_procedure_arguments.resource_name
+        )
+
+        if resource_query:
+            print(
+                f"\n:: [{resource_query[0]['resource_name']}]\n:: Value: '{resource_query[0]['resource_value']}'\n"
+            )
 
     def resource_create(
         self, molecular_procedure_arguments: MolecularProcedureArguments
@@ -394,6 +482,7 @@ class MolecularDaemon:
     database_instance = None
     database_query_instance = None
     resource_manager = None
+    arguments = None
 
     def __init__(self, database_path: str, ipc_instance_route: str = None):
         if ipc_instance_route:
@@ -407,11 +496,30 @@ class MolecularDaemon:
             self.ipc_instance, self.database_instance, self.database_query_instance
         )
 
+    def arguments_create(self):
+        argument_parser = argparse.ArgumentParser(
+            prog="molmessg",
+            description="The Molecular Access daemon, a background process which receives and outputs Molecular messages.",
+        )
+        argument_parser.add_argument(
+            "-r",
+            "--route",
+            default="molaccessd",
+            help="The IPC route which should be used for communications. This value must be the same across any process using Molecular! Changing this value is NOT recommended.",
+        )
+
+        self.arguments = argument_parser.parse_args()
+
+        self.ipc_instance_route = self.arguments.route
+
+
     def application_on_update(self, data_input: str):
         """
         This is a callback function called from the low-level Molecular C++ API
         whenever an IPC message is received.
         """
+
+        print(f":: Received message: `{data_input}`")
 
         self.resource_manager.procedure_call_json(data_input)
 
@@ -431,6 +539,7 @@ def main():
     print(f":: Running `molaccessd` with PID `{os.getpid()}`.")
 
     molaccessd_application_instance = MolecularDaemon("../../test-database.json")
+    molaccessd_application_instance.arguments_create()
     molaccessd_application_instance.application_run()
 
 
