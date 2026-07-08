@@ -14,8 +14,27 @@ def message_create(method: str, argument_dictionary: dict) -> dict:
     return new_message
 
 
+class ConsumerThread(threading.Thread):
+    def __init__(self, ipc_instance_route, args=(), kwargs=None):
+        threading.Thread.__init__(self, args=(), kwargs=None)
+
+        self.ipc_instance_route = ipc_instance_route
+
+    def on_update(self, data: str):
+        print("Updated thread.")
+        print(data)
+
+    def run(self):
+        print(f":: Creating new consumer thread on route `{self.ipc_instance_route}`.")
+
+        ipc_instance = molaccesspy.ManagedConsumer(self.ipc_instance_route)
+        ipc_instance.subscribe_update(self.on_update)
+
+
 class CommandManager:
     commands: list = ["HELP", "SEND", "JSEND", "EXIT"]
+    is_announced: bool = False
+    announced_route = ""
 
     application_ipc_instance = None
 
@@ -37,13 +56,55 @@ class CommandManager:
         message = message_create(method_argument_string, argument_dictionary)
         message_json = json.dumps(message)
 
-        # To do: Check if the procedure call to be sent out requires a ManagedConsumer
+        create_consumer = False
+        is_announcing: bool = False
+        procedure = message["message"]["method"]
+
+        # Check if the procedure call to be sent out requires a ManagedConsumer
+        match procedure:
+            case "READ":
+                create_consumer = True
+            case "STAT":
+                create_consumer = True
+            case "ANNOUNCE":
+                self.announced_route = message["message"]["arguments"][
+                    "connection_route"
+                ]
+                is_announcing = True
+            case _:
+                pass
+
         # If it does, create one in a new thread with the route passed in the message
         # The route specified should never equal `molaccessd`, and `molaccessd`'s
         # newly created ManagedProducer should send data back to the route specified
         # by the message sent from `molmessg`.
+        if is_announcing and self.is_announced:
+            print(
+                ":: Error: `ANNOUNCE` procedure may not be called, this instance has already been announced."
+            )
+        elif is_announcing:
+            print(f":: Announcing this instance as {self.announced_route}")
+            self.is_announced = True
+
+        if create_consumer:
+            if not self.is_announced:
+                print(
+                    ":: Error: The `READ` or `STAT` procedures may not be called without having announced."
+                )
+
+                return
+
+            print(
+                f":: Procedure `{procedure}` requires a consumer, creating one in a new thread."
+            )
+
+            consumer_thread = ConsumerThread(self.announced_route)
+            consumer_thread.start()
 
         self.application_ipc_instance.send_data(str(message_json))
+
+        if create_consumer:
+            consumer_thread.join()
 
     def command_send_json(self, json_string):
         self.application_ipc_instance.send_data(str(json_string))

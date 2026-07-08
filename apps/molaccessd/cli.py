@@ -37,16 +37,13 @@ class MolecularDaemonConnectionThread(threading.Thread):
 
         print(f":: Created new producer thread on route `{self.ipc_instance_route}`.")
 
-        # while True:
-        #     queue_message = self.messaging_queue.get()
+        while True:
+            queue_message = self.messaging_queue.get()
 
-        #     if queue_message is None: # A None value will close the thread.
-        #         break
+            if queue_message is None:  # A None value will close the thread.
+                break
 
-        #     print(queue_message)
-
-        # To do: Make `molmessg` create a consumer thread.
-        ipc_instance.send_data("Meow")
+            print(queue_message)
 
 
 class MolecularDaemonConnection:
@@ -66,7 +63,6 @@ class MolecularDaemonConnection:
 
     def connection_start(self):
         self.ipc_producer_thread.start()
-        self.ipc_producer_thread.join()
 
 
 class MolecularProcedureArguments:
@@ -359,6 +355,11 @@ class MolecularResourceManager:
         )
 
         if resource_query:
+            # To do:
+            # 1. Match resource's data to `ipc_connections` for relevant thread
+            # 2. Submit data to the thread object's queue
+            # 3. Read that data from the queue and send it back
+
             print(
                 f"\n:: [{resource_query[0]['resource_name']}]\n:: Value: '{resource_query[0]['resource_value']}'\n"
             )
@@ -426,7 +427,6 @@ class MolecularResourceManager:
         )
 
         if not resource_query:
-            # To do: Common error handling
             print(
                 f":: Error: Could not find {molecular_procedure_arguments.resource_name}"
             )
@@ -533,7 +533,11 @@ class MolecularDaemon:
         Runs the `molaccessd` core update loop.
         """
 
-        self.ipc_instance.subscribe_update(self.application_on_update)
+        while True:
+            try:
+                self.ipc_instance.subscribe_update(self.application_on_update)
+            except KeyboardInterrupt:
+                break
 
 
 def main():
