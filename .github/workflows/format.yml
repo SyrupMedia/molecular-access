@@ -20,7 +20,7 @@ jobs:
       run: |
         git config --local user.email "integration@molasses.love"
         git config --local user.name "Honeybot Ant[bot]"
-        git commit -a -m "Re-formatted files"
+        test -z "$(git status --porcelain)" || git commit -a -m "Re-formatted files"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
