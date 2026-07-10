@@ -197,7 +197,7 @@ class MolecularMesssagingBase:
             self.call_command(str(self.arguments.command))
         elif self.arguments.script:
             line_count: int = 0
-            
+
             with open(
                 file=f"{self.arguments.script}", mode="r", encoding="utf-8"
             ) as script_file:
@@ -230,7 +230,9 @@ class MolecularMesssagingBase:
                                 self.call_command(str(line))
                             else:
                                 # To do: Unified way to safely throw errors.
-                                raise Exception(f"Command `{command}` is not a valid command.")
+                                raise Exception(
+                                    f"Command `{command}` is not a valid command."
+                                )
 
 
 def main():
