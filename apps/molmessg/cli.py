@@ -179,7 +179,7 @@ class MolecularMesssagingBase:
             help="The IPC route which should be used for communications. This value must be the same across any process using Molecular! Changing this value is NOT recommended.",
         )
         argument_parser.add_argument(
-            "file",
+            "script",
             help="A `molmsg` script to parse commands from.",
         )
 
@@ -196,30 +196,41 @@ class MolecularMesssagingBase:
         elif self.arguments.command:
             self.call_command(str(self.arguments.command))
         elif self.arguments.script:
+            line_count: int = 0
+            
             with open(
-                file=f"{arguments.script}", mode="r", encoding="utf-8"
+                file=f"{self.arguments.script}", mode="r", encoding="utf-8"
             ) as script_file:
-                script_string: str = script_file.read()
+                script_string: str = script_file.readlines()
 
                 for line in script_string:
+                    line_count += 1
+
+                    print(f"Parsing line {line_count}:   \n{line}")
+
                     # ignore comments
-                    if not line.startswith("#"):
+                    if line.startswith("#"):
                         pass
-
-                    # To do: Support semicolons.
-                    # if ';' in line
-                    # # Check if semicolon is in between qoutes or not.
-                    # # If it isn't then treat it as a delimiter between commands.
-                    # pass
-
-                    command = str(line).split()[0]
-
-                    # Check if the first word of the line is a valid command
-                    if command in CommandManager.commands:
-                        self.call_command(str(line))
+                    elif not line:
+                        pass
                     else:
-                        # To do: Unified way to safely throw errors.
-                        raise Exception(f"Command `{command}` is not a valid command.")
+                        # To do: Support semicolons.
+                        # if ';' in line
+                        # # Check if semicolon is in between qoutes or not.
+                        # # If it isn't then treat it as a delimiter between commands.
+                        # pass
+
+                        command = str(line).split()
+
+                        if command:
+                            command = command[0]
+
+                            # Check if the first word of the line is a valid command
+                            if command in CommandManager.commands:
+                                self.call_command(str(line))
+                            else:
+                                # To do: Unified way to safely throw errors.
+                                raise Exception(f"Command `{command}` is not a valid command.")
 
 
 def main():

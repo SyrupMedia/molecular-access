@@ -9,14 +9,14 @@ services:
         target: /opt/workdir
     tty: true
     command: /bin/sh -c "nix develop .#container"
-  develop:
-    image: molaccess/nix:latest
-    build:
-      dockerfile: ./Dockerfile
-    volumes:
-      - type: bind
-        source: ./
-        target: /opt/workdir
-    stdin_open: true
-    tty: true
-    command: /bin/sh -c "nix develop"
+  # develop:
+  #   image: molaccess/nix:latest
+  #   build:
+  #     dockerfile: ./Dockerfile
+  #   volumes:
+  #     - type: bind
+  #       source: ./
+  #       target: /opt/workdir
+  #   stdin_open: true
+  #   tty: true
+  #   command: /bin/sh -c "nix develop"

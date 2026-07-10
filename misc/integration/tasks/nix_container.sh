@@ -6,4 +6,4 @@ echo "Running tests..."
 
 molaccessd &
 
-molmessg /opt/tests.molmsg
+molmessg ./misc/integration/tasks/tests.molmsg
