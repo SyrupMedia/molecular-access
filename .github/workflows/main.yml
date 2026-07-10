@@ -32,5 +32,5 @@ jobs:
       run: |
         # To do: Make this run `run_message_test.sh`
         python3 molaccessd_test.py &
-        python3 molmessg_test.py -c 'SEND ANNOUNCE connection_route=announcetest3 resource_collection=Testing'
+        python3 molmessg_test.py -c 'SEND ANNOUNCE connection_route=announcetest resource_collection=Testing'
         python3 molmessg_test.py -c 'SEND CREATE resource_name=Name resource_value=Value resource_value_default=DefaultValue resource_value_type=string'

@@ -6,11 +6,11 @@
 }:
 let
   import_patch = ''
-  sys.path.append(
-      '"${molaccess_core}/lib"'
-  )
+    sys.path.append(
+        '"${molaccess_core}/lib"'
+    )
 
-  import molaccesspy
+    import molaccesspy
   '';
 in
 with python314Packages;
@@ -29,9 +29,9 @@ buildPythonApplication {
   src = ../../.;
 
   postPatch = ''
-      substituteInPlace apps/molmessg/cli.py \
-          --replace "import molaccesspy" "${import_patch}"
-      substituteInPlace apps/molaccessd/cli.py \
-          --replace "import molaccesspy" "${import_patch}"
+    substituteInPlace apps/molmessg/cli.py \
+        --replace "import molaccesspy" "${import_patch}"
+    substituteInPlace apps/molaccessd/cli.py \
+        --replace "import molaccesspy" "${import_patch}"
   '';
 }

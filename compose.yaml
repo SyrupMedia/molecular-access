@@ -1,6 +1,16 @@
 services:
-  dev:
-    image: molaccessdev
+  develop-container:
+    image: molaccess/nix:latest
+    build:
+      dockerfile: ./Dockerfile
+    volumes:
+      - type: bind
+        source: ./
+        target: /opt/workdir
+    tty: true
+    command: /bin/sh -c "nix develop .#container"
+  develop:
+    image: molaccess/nix:latest
     build:
       dockerfile: ./Dockerfile
     volumes:

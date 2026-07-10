@@ -1,0 +1,13 @@
+#!/usr/bin/env molmessg
+
+SEND ANNOUNCE connection_route=announcetest resource_collection=Testing
+
+# Creation
+SEND CREATE resource_name=Name resource_value=Value resource_value_default=DefaultValue resource_value_type=string
+
+# Reading
+SEND STAT resource_name=Name
+SEND READ resource_name=Name
+
+# Writing
+SEND SET resource_name=Name resource_value=ValueSet

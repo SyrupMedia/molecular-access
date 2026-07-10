@@ -6,7 +6,7 @@ SCRIPTPATH=$(dirname "$SCRIPT")
 python3 "$SCRIPTPATH/molaccessd_test.py" &
 
 # Announce to `molaccessd`
-python3 "$SCRIPTPATH/molmessg_test.py" -c 'SEND ANNOUNCE connection_route=announcetest3 resource_collection=Testing'
+python3 "$SCRIPTPATH/molmessg_test.py" -c 'SEND ANNOUNCE connection_route=announcetest resource_collection=Testing'
 
 # Creation
 python3 "$SCRIPTPATH/molmessg_test.py" -c 'SEND CREATE resource_name=Name resource_value=Value resource_value_default=DefaultValue resource_value_type=string'

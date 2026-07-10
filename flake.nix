@@ -17,7 +17,8 @@
         system:
         let
           pkgs = (import nixpkgs { inherit system; });
-          molaccess_core = pkgs.callPackage ./misc/nix/molaccess_core.nix { };
+          libipc = pkgs.callPackage ./misc/nix/dependencies/libipc.nix { };
+          molaccess_core = pkgs.callPackage ./misc/nix/molaccess_core.nix { inherit libipc; };
           molaccess_python = pkgs.callPackage ./misc/nix/molaccess_python.nix { inherit molaccess_core; };
           molaccess = pkgs.callPackage ./misc/nix/molaccess.nix {
             inherit molaccess_python;
@@ -33,6 +34,18 @@
               molaccess_core
               molaccess_python
             ];
+          };
+          # Used inside of container images
+          container = pkgs.mkShell {
+            inputsFrom = [
+              molaccess_core
+              molaccess_python
+            ];
+            packages = [
+              molaccess_core
+              molaccess_python
+            ];
+            shellHook = "exec ./misc/integration/tasks/nix_container.sh";
           };
           # autoformat task (`nix develop .#format`)
           format = pkgs.mkShellNoCC {
