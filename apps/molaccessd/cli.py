@@ -6,9 +6,10 @@ This file should not be imported as a module.
 """
 
 import argparse
-import os
 import datetime
 import json
+import os
+import sys
 import threading
 
 from dataclasses import dataclass
@@ -363,6 +364,9 @@ class MolecularResourceManager:
             print(
                 f"\n:: [{resource_query[0]['resource_name']}]\n:: Value: '{resource_query[0]['resource_value']}'\n"
             )
+
+            resource_collection = resource_query[0]["resource_collection"]
+            print(f"Collection: {resource_collection}")
 
     def resource_create(
         self, molecular_procedure_arguments: MolecularProcedureArguments

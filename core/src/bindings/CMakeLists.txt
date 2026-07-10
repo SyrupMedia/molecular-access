@@ -18,3 +18,4 @@ endif()
 link(molaccesspy)
 
 install(TARGETS molaccesspy DESTINATION lib)
+install(FILES ${CMAKE_BINARY_DIR}/core/src/bindings/molaccesspy.py DESTINATION lib)
