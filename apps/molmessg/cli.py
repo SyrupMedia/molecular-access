@@ -177,7 +177,7 @@ class MolecularMesssagingBase:
             "--route",
             default="molaccessd",
             help="The IPC route which should be used for communications. This value must be the same across any process using Molecular! Changing this value is NOT recommended.",
-        )        
+        )
         argument_parser.add_argument(
             "file",
             help="A `molmsg` script to parse commands from.",
@@ -196,28 +196,30 @@ class MolecularMesssagingBase:
         elif self.arguments.command:
             self.call_command(str(self.arguments.command))
         elif self.arguments.script:
-            with open(file=f"{arguments.script}", mode='r', encoding="utf-8") as script_file:
+            with open(
+                file=f"{arguments.script}", mode="r", encoding="utf-8"
+            ) as script_file:
                 script_string: str = script_file.read()
 
                 for line in script_string:
                     # ignore comments
-                    if not line.startswith('#'):
+                    if not line.startswith("#"):
                         pass
 
                     # To do: Support semicolons.
                     # if ';' in line
                     # # Check if semicolon is in between qoutes or not.
-                    # # If it isn't then treat it as a delimiter between commands.  
+                    # # If it isn't then treat it as a delimiter between commands.
                     # pass
 
                     command = str(line).split()[0]
-                    
+
                     # Check if the first word of the line is a valid command
                     if command in CommandManager.commands:
                         self.call_command(str(line))
                     else:
                         # To do: Unified way to safely throw errors.
-                        raise Exception(f"Command `{command}` is not a valid command.") 
+                        raise Exception(f"Command `{command}` is not a valid command.")
 
 
 def main():
