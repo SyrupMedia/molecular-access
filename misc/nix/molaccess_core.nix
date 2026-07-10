@@ -1,13 +1,26 @@
-{ lib, stdenv, fetchgit, fetchFromGitHub, cmake, ninja, python3, swig }:
+{
+  lib,
+  stdenv,
+  fetchgit,
+  fetchFromGitHub,
+  cmake,
+  ninja,
+  python3,
+  swig,
+}:
 stdenv.mkDerivation {
-  name = "molaccess";
+  name = "molaccess_core";
 
-  src = ./.;
+  src = ../../.;
 
-  nativeBuildInputs = [ cmake ninja swig ];
+  nativeBuildInputs = [
+    cmake
+    ninja
+    swig
+  ];
 
   # to do cross compilation python will need to be here if I understand correctly, since it is being linked against
-  buildInputs = [ 
+  buildInputs = [
     (
       # Build libipc
       stdenv.mkDerivation {
@@ -19,14 +32,17 @@ stdenv.mkDerivation {
           sha256 = "sha256-W8tWjc1YRUteYlLKpsl8XUjRCuMKsz9VBiVcexQj9BY=";
         };
 
-        nativeBuildInputs = [ cmake ninja ];
+        nativeBuildInputs = [
+          cmake
+          ninja
+        ];
       }
     )
 
-    python3   
+    python3
   ];
 
-  cmakeFlags =  [
+  cmakeFlags = [
     "-D MOLACCESS_NATIVE_LIBRARIES=true"
   ];
 }

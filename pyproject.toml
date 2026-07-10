@@ -9,6 +9,11 @@ authors = [
 
 [project.scripts]
 molaccessd = "molaccessd:cli.main"
+molmessg = "molmessg:cli.main"
+
+[tool.setuptools.package-dir]
+"molaccessd" = "apps/molaccessd"
+"molmessg" = "apps/molmessg"
 
 [tool.pylint.main]
 # Analyse import fallback blocks. This can be used to support both Python 2 and 3
