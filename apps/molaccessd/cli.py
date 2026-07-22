@@ -337,6 +337,10 @@ class MolecularResourceManager:
             resource_collection=molecular_procedure_arguments.resource_collection,
         )
 
+        self.ipc_connections = {
+            molecular_procedure_arguments.resource_collection: molecular_daemon_connection
+        }
+
         molecular_daemon_connection.connection_start()
 
     def resource_close(self):
@@ -366,7 +370,9 @@ class MolecularResourceManager:
             )
 
             resource_collection = resource_query[0]["resource_collection"]
-            print(f"Collection: {resource_collection}")
+            print(f":: Collection: {resource_collection}")
+
+            print(f":: Connections:\n{self.ipc_connections}")
 
     def resource_create(
         self, molecular_procedure_arguments: MolecularProcedureArguments
