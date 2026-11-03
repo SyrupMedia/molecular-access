@@ -15,7 +15,7 @@ def message_create(method: str, argument_dictionary: dict) -> dict:
 
 
 class ConsumerThread(threading.Thread):
-    def __init__(self, ipc_instance_route, args=(), kwargs=None):
+    def __init__(self, ipc_instance_route, application_ipc_instance, args=(), kwargs=None):
         threading.Thread.__init__(self, args=(), kwargs=None)
 
         self.ipc_instance_route = ipc_instance_route
@@ -98,7 +98,7 @@ class CommandManager:
                 f":: Procedure `{procedure}` requires a consumer, creating one in a new thread."
             )
 
-            consumer_thread = ConsumerThread(self.announced_route)
+            consumer_thread = ConsumerThread(self.announced_route, application_ipc_instance.application_communication_mode)
             consumer_thread.start()
 
         self.application_ipc_instance.send_data(str(message_json))

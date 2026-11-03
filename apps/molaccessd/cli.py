@@ -12,20 +12,41 @@ import os
 import sys
 import threading
 
-from dataclasses import dataclass
 from queue import Queue
+
+import molnet.networking
 
 import molaccesspy
 
 from tinydb import TinyDB, Query
 
 
+INTERFACE_IPC: dict = {
+    "name": "libipc interface",
+    "is_stable": False,  # This back-end is experimental
+}
+
+INTERFACE_SOCKET_NETWORKING: dict = {
+    "name": "TCP socket networking",
+    "is_stable": True,
+}
+
+
 class MolecularDaemonConnectionThread(threading.Thread):
-    def __init__(self, ipc_instance_route, messaging_queue, args=(), kwargs=None):
+    def __init__(
+        self,
+        channel_instance_route,
+        messaging_queue,
+        application_communication_mode,
+        args=(),
+        kwargs=None,
+    ):
         threading.Thread.__init__(self, args=(), kwargs=None)
 
-        self.ipc_instance_route = ipc_instance_route
+        self.application_communication_mode = application_communication_mode
+        self.channel_instance_route = channel_instance_route
         self.messaging_queue = messaging_queue
+        self.channel_instance = None
 
     def run(self):
         """
@@ -34,9 +55,18 @@ class MolecularDaemonConnectionThread(threading.Thread):
         messages back to announced connections.
         """
 
-        ipc_instance = molaccesspy.ManagedProducer(self.ipc_instance_route)
+        if self.application_communication_mode == INTERFACE_IPC:
+            self.channel_instance = molaccesspy.ManagedProducer(
+                self.channel_instance_route
+            )
+        else:
+            self.channel_instance = molnet.networking.ManagedProducer(
+                self.channel_instance_route
+            )
 
-        print(f":: Created new producer thread on route `{self.ipc_instance_route}`.")
+        print(
+            f":: Created new producer thread on route `{self.channel_instance_route}`."
+        )
 
         while True:
             queue_message = self.messaging_queue.get()
@@ -48,22 +78,30 @@ class MolecularDaemonConnectionThread(threading.Thread):
 
 
 class MolecularDaemonConnection:
-    ipc_instance_route: str = ""
+    channel_instance_route: str = ""
     resource_collection: str = ""
-    ipc_producer_thread: MolecularDaemonConnectionThread = None
+    channel_producer_thread: MolecularDaemonConnectionThread = None
     messaging_queue: Queue = None
 
-    def __init__(self, ipc_instance_route, resource_collection):
+    def __init__(
+        self,
+        channel_instance_route,
+        resource_collection,
+        application_communication_mode,
+    ):
         self.resource_collection = resource_collection
-        self.ipc_instance_route = ipc_instance_route
+        self.channel_instance_route = channel_instance_route
         self.messaging_queue = Queue()
+        self.application_communication_mode = application_communication_mode
 
-        self.ipc_producer_thread = MolecularDaemonConnectionThread(
-            ipc_instance_route, self.messaging_queue
+        self.channel_producer_thread = MolecularDaemonConnectionThread(
+            channel_instance_route,
+            self.messaging_queue,
+            self.application_communication_mode,
         )
 
     def connection_start(self):
-        self.ipc_producer_thread.start()
+        self.channel_producer_thread.start()
 
 
 class MolecularProcedureArguments:
@@ -189,9 +227,9 @@ class MolecularResourceManager:
     core of `molaccessd`.
     """
 
-    ipc_connections: dict[str:MolecularDaemonConnection]
+    channel_connections: dict[str:MolecularDaemonConnection]
 
-    application_ipc_instance = None
+    application_channel_instance = None
     database_instance = None
     database_query_instance = None
 
@@ -233,9 +271,10 @@ class MolecularResourceManager:
 
     def __init__(
         self,
-        application_ipc_instance,
+        application_channel_instance,
         application_database_instance,
         application_database_query_instance,
+        application_communication_mode,
     ):
         self.procedures = {
             "ANNOUNCE": self.resource_announce,
@@ -251,9 +290,10 @@ class MolecularResourceManager:
             "CALL": self.resource_call,
         }
 
-        self.application_ipc_instance = application_ipc_instance
+        self.application_channel_instance = application_channel_instance
         self.database_instance = application_database_instance
         self.database_query_instance = application_database_query_instance
+        self.application_communication_mode = application_communication_mode
 
     def procedure_call(self, procedure_key: str, _argument_dictionary):
         """
@@ -333,11 +373,12 @@ class MolecularResourceManager:
         """
 
         molecular_daemon_connection = MolecularDaemonConnection(
-            ipc_instance_route=molecular_procedure_arguments.connection_route,
+            channel_instance_route=molecular_procedure_arguments.connection_route,
             resource_collection=molecular_procedure_arguments.resource_collection,
+            application_communication_mode=self.application_communication_mode,
         )
 
-        self.ipc_connections = {
+        self.channel_connections = {
             molecular_procedure_arguments.resource_collection: molecular_daemon_connection
         }
 
@@ -361,7 +402,7 @@ class MolecularResourceManager:
 
         if resource_query:
             # To do:
-            # 1. Match resource's data to `ipc_connections` for relevant thread
+            # 1. Match resource's data to `channel_connections` for relevant thread
             # 2. Submit data to the thread object's queue
             # 3. Read that data from the queue and send it back
 
@@ -372,7 +413,7 @@ class MolecularResourceManager:
             resource_collection = resource_query[0]["resource_collection"]
             print(f":: Collection: {resource_collection}")
 
-            print(f":: Connections:\n{self.ipc_connections}")
+            print(f":: Connections:\n{self.channel_connections}")
 
     def resource_create(
         self, molecular_procedure_arguments: MolecularProcedureArguments
@@ -488,41 +529,69 @@ class MolecularDaemon:
     The `molaccessd` class, abstracting all functionality of the application.
     """
 
-    ipc_instance = None
-    ipc_instance_route: str = "molaccessd"
+    channel_instance = None
+    channel_instance_route: str = "molaccessd"
     database_path: str = ""
     database_instance = None
     database_query_instance = None
     resource_manager = None
     arguments = None
 
-    def __init__(self, database_path: str, ipc_instance_route: str = None):
-        if ipc_instance_route:
-            self.ipc_instance_route = ipc_instance_route
+    def __init__(self, database_path: str, channel_instance_route: str = None):
+        if channel_instance_route:
+            self.channel_instance_route = channel_instance_route
 
-        self.ipc_instance = molaccesspy.ManagedConsumer(self.ipc_instance_route)
+        self.arguments = self.arguments_create()
+
+        if self.arguments.ipc:
+            self.communication_mode = INTERFACE_IPC
+        else:
+            self.communication_mode = INTERFACE_SOCKET_NETWORKING
+
+        self.channel_instance_route = self.arguments.route
+
         self.database_path = database_path
         self.database_instance = TinyDB(database_path)
         self.database_query_instance = Query()
+
+        if self.communication_mode == INTERFACE_IPC:
+            self.channel_instance = molaccesspy.ManagedConsumer(
+                self.channel_instance_route
+            )
+        else:
+            self.channel_instance = molnet.networking.ManagedConsumer(
+                self.channel_instance_route
+            )
+
         self.resource_manager = MolecularResourceManager(
-            self.ipc_instance, self.database_instance, self.database_query_instance
+            self.channel_instance,
+            self.database_instance,
+            self.database_query_instance,
+            self.communication_mode,
         )
 
-    def arguments_create(self):
+    def arguments_create(self) -> argparse.Namespace:
         argument_parser = argparse.ArgumentParser(
             prog="molmessg",
             description="The Molecular Access daemon, a background process which receives and outputs Molecular messages.",
         )
+
         argument_parser.add_argument(
             "-r",
             "--route",
             default="molaccessd",
-            help="The IPC route which should be used for communications. This value must be the same across any process using Molecular! Changing this value is NOT recommended.",
+            help="The (IPC) channel route which should be used for communications. This value must be the same across any process using Molecular! Changing this value is NOT recommended.",
+        )
+        argument_parser.add_argument(
+            "-i",
+            "--ipc",
+            help="Use the experimental `libipc` back-end rather than TCP networking.",
+            action="store_true",
         )
 
-        self.arguments = argument_parser.parse_args()
+        arguments = argument_parser.parse_args()
 
-        self.ipc_instance_route = self.arguments.route
+        return arguments
 
     def application_on_update(self, data_input: str):
         """
@@ -545,7 +614,7 @@ class MolecularDaemon:
 
         while True:
             try:
-                self.ipc_instance.subscribe_update(self.application_on_update)
+                self.channel_instance.subscribe_update(self.application_on_update)
             except KeyboardInterrupt:
                 break
 
@@ -554,7 +623,6 @@ def main():
     print(f":: Running `molaccessd` with PID `{os.getpid()}`.")
 
     molaccessd_application_instance = MolecularDaemon("../../test-database.json")
-    molaccessd_application_instance.arguments_create()
     molaccessd_application_instance.application_run()
 
 
